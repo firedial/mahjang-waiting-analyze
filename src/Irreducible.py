@@ -43,13 +43,13 @@ def isAtamaConnectedShuntsuIrreducible(hand: Hand) -> bool:
         return True
 
 
-def isIrreducible(h):
-    if not isMentsuIrreducible(h):
+def isIrreducible(hand: Hand):
+    if not isMentsuIrreducible(hand):
         return False
 
     # 正規形のときは待ち送り形の既約もみる
-    if sum(h) % 3 == 1:
-        if not isAtamaIrreducible(h) or not isAtamaConnectedShuntsuIrreducible(h):
+    if hand.isRegularForm():
+        if not isAtamaIrreducible(hand) or not isAtamaConnectedShuntsuIrreducible(hand):
             return False
 
     return True

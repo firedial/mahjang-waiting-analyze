@@ -24,6 +24,9 @@ class Hand:
     def sum(self) -> int:
         return sum(self.hand)
 
+    def isRegularForm(self) -> bool:
+        return self.sum() % 3 == 1
+
     def getRemainTileCount(self, index: int) -> int:
         if index < 0 or index >= self.HAND_LENGTH:
             raise ValueError("Invalid index.")
