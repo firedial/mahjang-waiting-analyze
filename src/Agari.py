@@ -1,5 +1,6 @@
 from src.Hand import Hand
 import src.Remove as Remove
+import src.Waiting as Waiting
 
 def isAgari(hand: Hand) -> bool:
     """
@@ -42,3 +43,26 @@ def isAgari(hand: Hand) -> bool:
             return True
     else:
         return False
+
+
+def getWaiting(hand: Hand) -> Waiting:
+    waitingCount = []
+
+    for index in range(hand.length()):
+        # 一枚牌を追加する
+        addedTileHand = hand.addTile(index)
+
+        # 追加できなかったときは次のループへ
+        if addedTileHand is None:
+            waitingCount.append(0)
+            continue
+
+        if isAgari(addedTileHand):
+            waitingCount.append(hand.getRemainTileCount(index))
+        else:
+            waitingCount.append(0)
+
+    # 待ち送り系かどうか
+    isSendable = isAgari(hand)
+
+    return Waiting.Waiting(waitingCount, isSendable)
