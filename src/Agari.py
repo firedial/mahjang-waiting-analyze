@@ -45,7 +45,7 @@ def isAgari(hand: Hand) -> bool:
         return False
 
 
-def getWaiting(hand: Hand) -> Waiting:
+def getWaiting(hand: Hand, atamaWaitingCount: int = 1) -> Waiting:
     waitingCount = []
 
     for index in range(hand.length()):
@@ -62,7 +62,4 @@ def getWaiting(hand: Hand) -> Waiting:
         else:
             waitingCount.append(0)
 
-    # 待ち送り系かどうか
-    isSendable = isAgari(hand)
-
-    return Waiting.Waiting(waitingCount, isSendable)
+    return Waiting.Waiting(waitingCount, atamaWaitingCount if isAgari(hand) else 0)
