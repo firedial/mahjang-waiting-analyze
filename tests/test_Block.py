@@ -1,7 +1,7 @@
 import unittest
 import src.Block as Block
 
-class TestHand(unittest.TestCase):
+class TestBlock(unittest.TestCase):
     def test_init(self):
         # 長さが0であるブロック
         with self.assertRaises(ValueError):
