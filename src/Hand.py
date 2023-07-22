@@ -10,7 +10,7 @@ class Hand:
 
     def __init__(self, hand: list[int]):
         if len(hand) != self.HAND_LENGTH:
-            raise ValueError("Wrong tile count.")
+            raise ValueError("Wrong hand length.")
 
         for tile in hand:
             if tile > self.MAX_TILE_COUNT or tile < 0:
