@@ -17,3 +17,6 @@ class Hand:
                 raise ValueError("Wrong tile count.")
 
         object.__setattr__(self, "hand", hand)
+
+    def length(self) -> int:
+        return len(self.hand)

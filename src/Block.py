@@ -18,3 +18,5 @@ class Block:
 
         object.__setattr__(self, "block", block)
 
+    def length(self) -> int:
+        return len(self.block)
