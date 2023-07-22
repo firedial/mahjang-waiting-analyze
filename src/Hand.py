@@ -20,3 +20,6 @@ class Hand:
 
     def length(self) -> int:
         return len(self.hand)
+
+    def sum(self) -> int:
+        return sum(self.hand)
