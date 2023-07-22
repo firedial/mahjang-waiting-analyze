@@ -16,9 +16,5 @@ class Block:
             if tile > self.MAX_TILE_COUNT or tile < 0:
                 raise ValueError("Wrong tile count.")
 
-        # 両端が0でないことをみる
-        if block[0] == 0 or block[-1] == 0:
-            raise ValueError("Edge is zero.")
-
         object.__setattr__(self, "block", block)
 

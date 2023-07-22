@@ -19,14 +19,6 @@ class TestHand(unittest.TestCase):
         with self.assertRaises(ValueError):
             Block.Block([1, 1, 1, 1, 1, 1, 1, 1, 5])
 
-        # 左端が0であるブロック
-        with self.assertRaises(ValueError):
-            Block.Block([0, 1, 1])
-
-        # 右端が0であるブロック
-        with self.assertRaises(ValueError):
-            Block.Block([1, 1, 0])
-
         # 正常系
         block = Block.Block([1, 2, 3])
         self.assertEqual(block.block, [1, 2, 3])
