@@ -1,7 +1,7 @@
-from src.Hand import Hand
+from src.Suit import Suit
 from src.Block import Block
 
-def getRemovedBlockPatterns(hand: Hand, block: Block) -> list[Hand]:
+def getRemovedBlockPatterns(hand: Suit, block: Block) -> list[Suit]:
     """
     手牌から牌を除去できるパターンのリストを返す
 
@@ -28,11 +28,11 @@ def getRemovedBlockPatterns(hand: Hand, block: Block) -> list[Hand]:
                 break
         else:
             # 全て 0 以上なのでリストに追加する
-            removedHands.append(Hand(tmpHand))
+            removedHands.append(Suit(tmpHand))
 
     return removedHands
 
-def getRemovedMultiBlockPatterns(hand: Hand, blocks: list[Block]) -> list[Hand]:
+def getRemovedMultiBlockPatterns(hand: Suit, blocks: list[Block]) -> list[Suit]:
     """
     手牌から牌を除去できるパターンのリストを返す
 
@@ -51,7 +51,7 @@ def getRemovedMultiBlockPatterns(hand: Hand, blocks: list[Block]) -> list[Hand]:
 
     return removedHands
 
-def getRemovedAtamaPatterns(hand: Hand) -> list[Hand]:
+def getRemovedAtamaPatterns(hand: Suit) -> list[Suit]:
     """
     雀頭のパターンを省けるだけ省いた牌形のリストを返す
 
@@ -63,7 +63,7 @@ def getRemovedAtamaPatterns(hand: Hand) -> list[Hand]:
     """
     return getRemovedBlockPatterns(hand, Block([2]))
 
-def getRemovedKotsuPatterns(hand: Hand) -> list[Hand]:
+def getRemovedKotsuPatterns(hand: Suit) -> list[Suit]:
     """
     刻子のパターンを省けるだけ省いた牌形のリストを返す
 
@@ -75,7 +75,7 @@ def getRemovedKotsuPatterns(hand: Hand) -> list[Hand]:
     """
     return getRemovedBlockPatterns(hand, Block([3]))
 
-def getRemovedShuntsuPatterns(hand: Hand) -> list[Hand]:
+def getRemovedShuntsuPatterns(hand: Suit) -> list[Suit]:
     """
     順子のパターンを省けるだけ省いた牌形のリストを返す
 
@@ -87,7 +87,7 @@ def getRemovedShuntsuPatterns(hand: Hand) -> list[Hand]:
     """
     return getRemovedBlockPatterns(hand, Block([1, 1, 1]))
 
-def getRemovedAtamaConnectedShuntsuPatterns(hand: Hand) -> list[Hand]:
+def getRemovedAtamaConnectedShuntsuPatterns(hand: Suit) -> list[Suit]:
     """
     雀頭接続順子のパターンを省けるだけ省いた牌形のリストを返す
 
@@ -99,7 +99,7 @@ def getRemovedAtamaConnectedShuntsuPatterns(hand: Hand) -> list[Hand]:
     """
     return getRemovedMultiBlockPatterns(hand, [Block([3, 1, 1, 0]), Block([0, 1, 1, 3])])
 
-def getRemovedMentsuPatterns(hand: Hand) -> list[Hand]:
+def getRemovedMentsuPatterns(hand: Suit) -> list[Suit]:
     """
     面子(刻子と順子)のパターンを省けるだけ省いた牌形のリストを返す
 
@@ -111,7 +111,7 @@ def getRemovedMentsuPatterns(hand: Hand) -> list[Hand]:
     """
     return getRemovedKotsuPatterns(hand) + getRemovedShuntsuPatterns(hand)
 
-def getRemovedSendableFormPatterns(hand: Hand) -> list[Hand]:
+def getRemovedSendableFormPatterns(hand: Suit) -> list[Suit]:
     """
     待ち送り系のパターンを省けるだけ省いた牌形のリストを返す
 

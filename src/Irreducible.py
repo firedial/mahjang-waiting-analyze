@@ -5,39 +5,36 @@ import src.Agari as Agari
 
 
 def isMentsuIrreducible(hand: Hand) -> bool:
-    waiting: Waiting = Agari.getWaiting(hand)
-    removedHands: list[Waiting] = Remove.getRemovedMentsuPatterns(hand)
+    removedSuits = Remove.getRemovedMentsuPatterns(hand.suit)
 
-    for removedHand in removedHands:
-        removedHandWaiting = Agari.getWaiting(removedHand)
+    for removedSuits in removedSuits:
+        removedHand = Hand(removedSuits, False)
 
-        if not (removedHandWaiting < waiting):
+        if not (removedHand < hand):
             return False
     else:
         return True
 
 
 def isAtamaIrreducible(hand: Hand) -> bool:
-    waiting: Waiting = Agari.getWaiting(hand)
-    removedHands: list[Waiting] = Remove.getRemovedAtamaPatterns(hand)
+    removedSuits = Remove.getRemovedAtamaPatterns(hand.suit)
 
-    for removedHand in removedHands:
-        removedHandWaiting = Agari.getWaiting(removedHand)
+    for removedSuits in removedSuits:
+        removedHand = Hand(removedSuits, False)
 
-        if not (removedHandWaiting < waiting):
+        if not (removedHand < hand):
             return False
     else:
         return True
 
 
 def isAtamaConnectedShuntsuIrreducible(hand: Hand) -> bool:
-    waiting: Waiting = Agari.getWaiting(hand)
-    removedHands: list[Waiting] = Remove.getRemovedAtamaPatterns(hand)
+    removedSuits = Remove.getRemovedAtamaConnectedShuntsuPatterns(hand.suit)
 
-    for removedHand in removedHands:
-        removedHandWaiting = Agari.getWaiting(removedHand, 2)
+    for removedSuits in removedSuits:
+        removedHand = Hand(removedSuits, True)
 
-        if not (removedHandWaiting < waiting):
+        if not (removedHand < hand):
             return False
     else:
         return True

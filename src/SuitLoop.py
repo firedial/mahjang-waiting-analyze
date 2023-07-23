@@ -1,4 +1,4 @@
-import src.Hand as Hand
+import src.Suit as Suit
 
 """
 牌形を全パターン舐めるアルゴリズム(通称: 牌くるくる)
@@ -39,7 +39,7 @@ B: 先頭が 0 でない時
 """
 
 
-def nextHand(hand: Hand) -> Hand:
+def nextSuit(suit: Suit) -> Suit:
     """
     次の牌形を取得する
 
@@ -50,13 +50,13 @@ def nextHand(hand: Hand) -> Hand:
         Hand: 次の牌形
     """
 
-    nextHand = hand.hand.copy()
+    nextSuit = suit.suit.copy()
 
     while True:
         # 牌形の先頭が 0 かどうかで処理が分かれる
-        nextHand = nextHandNonZeroFirst(nextHand) if hand.isFirstTIleZero() else nextHandNonZeroFirst(nextHand)
+        nextHand = nextHandNonZeroFirst(nextSuit) if suit.isFirstTIleZero() else nextHandNonZeroFirst(nextSuit)
         try:
-            return Hand.Hand(nextHand)
+            return Suit.Suit(nextSuit)
         except:
             continue
 

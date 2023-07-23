@@ -1,8 +1,8 @@
-from src.Hand import Hand
+from src.Suit import Suit
 import src.Remove as Remove
 import src.Waiting as Waiting
 
-def isAgari(hand: Hand) -> bool:
+def isAgari(hand: Suit) -> bool:
     """
     渡された牌形が和了形であるかどうかを判定する
 
@@ -45,7 +45,7 @@ def isAgari(hand: Hand) -> bool:
         return False
 
 
-def getWaiting(hand: Hand, atamaWaitingCount: int = 1) -> Waiting:
+def getWaiting(hand: Suit) -> Waiting:
     waitingCount = []
 
     for index in range(hand.length()):
@@ -62,4 +62,4 @@ def getWaiting(hand: Hand, atamaWaitingCount: int = 1) -> Waiting:
         else:
             waitingCount.append(0)
 
-    return Waiting.Waiting(waitingCount, atamaWaitingCount if isAgari(hand) else 0)
+    return Waiting.Waiting(waitingCount, isAgari(hand))
