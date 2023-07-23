@@ -44,78 +44,78 @@ def nextSuit(suit: Suit) -> Suit:
     次の牌形を取得する
 
     Args:
-        hand (Hand): 牌形
+        suit (Suit): 数牌
 
     Returns:
-        Hand: 次の牌形
+        Suit: 次の数牌
     """
 
     nextSuit = suit.suit.copy()
 
     while True:
         # 牌形の先頭が 0 かどうかで処理が分かれる
-        nextHand = nextHandNonZeroFirst(nextSuit) if suit.isFirstTIleZero() else nextHandNonZeroFirst(nextSuit)
+        nextSuit = nextSuitNonZeroFirst(nextSuit) if suit.isFirstTIleZero() else nextSuitNonZeroFirst(nextSuit)
         try:
             return Suit.Suit(nextSuit)
         except:
             continue
 
 
-def nextHandNonZeroFirst(hand: list[int]) -> list[int]:
+def nextSuitNonZeroFirst(suit: list[int]) -> list[int]:
     """
-    牌形の先頭が 0 でない時の処理
+    数牌の先頭が 0 でない時の処理
 
     Args:
-        hand (list[int]): 牌形
+        suit (list[int]): 数牌
 
     Returns:
-        list[int]: 次の牌形
+        list[int]: 次の数牌
     """
 
-    handLength: int = len(hand)
+    suitLength: int = len(suit)
     index = 1
 
     # 先頭の数字を控えておく
-    first = hand[0]
+    first = suit[0]
     # どの処理でも先頭は 0 になる
-    hand[0] = 0
+    suit[0] = 0
 
-    while index < handLength:
+    while index < suitLength:
         # 0 でない数字を見つけた時
-        if hand[index] != 0:
+        if suit[index] != 0:
             # その場所の数字を 0 にする
-            hand[index] -= 1
+            suit[index] -= 1
             # その前の場所の数字を先頭 + 1 の数字にする
-            hand[index - 1] = first + 1
-            return hand
+            suit[index - 1] = first + 1
+            return suit
         index += 1
 
     # 先頭以外で 0 が見つからなかった時は末尾を先頭の数字にする
-    hand[handLength - 1] = first
-    return hand
+    suit[suitLength - 1] = first
+    return suit
 
-def nextHandZeroFirst(hand: list[int]) -> list[int]:
+def nextSuitZeroFirst(suit: list[int]) -> list[int]:
     """
-    牌形の先頭が 0 である時の処理
+    数牌の先頭が 0 である時の処理
 
     Args:
-        hand (list[int]): 牌形
+        suit (list[int]): 数牌
 
     Returns:
-        list[int]: 次の牌形
+        list[int]: 次の数牌
     """
 
-    handLength: int = len(hand)
+    suitLength: int = len(suit)
     index: int = 0
 
-    while index < handLength:
+    while index < suitLength:
         # 初めて 0 でない数字を見つけた時
-        if hand[index] != 0:
+        if suit[index] != 0:
             # その場所の数字を 1 引く
-            hand[index] -= 1
+            suit[index] -= 1
             # その前の場所を 1 にする
-            hand[index - 1] = 1
-            return hand
+            suit[index - 1] = 1
+            return suit
         index += 1
 
 
