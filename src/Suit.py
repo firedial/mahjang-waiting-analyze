@@ -48,6 +48,47 @@ class Suit:
 
         return Suit(resultSuit)
 
+    def getOneLeftSuit(self):
+        resultSuit = []
+        for index in range(1, self.length()):
+            resultSuit.append(self.suit[index])
+
+        resultSuit.append(0)
+        return Suit(resultSuit)
+
+    def getOneRightSuit(self):
+        resultSuit = [0]
+        for index in range(0, self.length() - 1):
+            resultSuit.append(self.suit[index])
+
+        return Suit(resultSuit)
+
+    def getRightAttachSuit(self):
+        resultSuit = self
+        for _ in range(8 - self.getRange()):
+            resultSuit = resultSuit.getOneRightSuit()
+
+        return resultSuit
+
+    def getReverseSuit(self):
+        resultSuit = self.suit.copy()
+        resultSuit.reverse()
+        return Suit(resultSuit)
+
+    def getRange(self) -> int:
+        fisrtIndex = 0
+        for index in range(self.length()):
+            if self.suit[index] != 0:
+                firstIndex = index
+                break
+
+        lastIndex = self.length() - 1
+        for index in range(self.length()):
+            if self.suit[self.length() - 1 - index] != 0:
+                lastIndex = self.length() - 1 - index
+                break
+
+        return lastIndex - firstIndex + 1
 
     def isBasicForm(self) -> bool:
         """
