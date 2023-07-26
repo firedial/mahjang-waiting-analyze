@@ -28,60 +28,78 @@ def getSuitFromNumber(number: int) -> Suit:
             return Suit.Suit([0, 0, 0, 0, 0, 1, 4, 4, 4])
 
 
-def getWaitingPattern(number: int):
+def setWaitingPatern(waitingPattern: dict, waitingNumber: int, suit):
+    waitingPattern[tuple(suit.suit)] = {"number": waitingNumber, "length": suit.getRange(), "position": suit.getPosition(), "gravity": suit.getSuitGravityPosition()}
+
+
+def getWaitingPattern(waitingPattern: dict, number: int):
     suit = getSuitFromNumber(number)
     firstSuit = suit.suit.copy()
-    waitingPattern = set()
+
+    count = 0
     while True:
+        count += 1
+        waitingNumber = count * 100 + number
         if not suit.isBasicForm():
             suit = SuitLoop.nextSuit(suit)
-            if (suit.suit == firstSuit):
+            if suit.suit == firstSuit:
                 break
 
             continue
 
         hand = Hand.Hand(suit, False)
-        if hand.isBasicForm() and hand.isTempai() and hand.isIrreducible():
-            reverseRightAtattchSuit = suit.getOneLeftSuit().getReverseSuit()
+        if not (hand.isBasicForm() and hand.isTempai() and hand.isIrreducible()):
+            suit = SuitLoop.nextSuit(suit)
+            if suit.suit == firstSuit:
+                break
 
-            if suit.getRange() <= 7:
-                for _ in range(8 - suit.getRange()):
-                    reverseRightAtattchSuit = reverseRightAtattchSuit.getOneLeftSuit()
-                    waitingPattern.add(tuple(reverseRightAtattchSuit.suit))
-                    waitingPattern.add(tuple(reverseRightAtattchSuit.getReverseSuit().suit))
+            continue
 
-                leftAtattchSuit = suit.getOneLeftSuit()
-                hand = Hand.Hand(leftAtattchSuit, False)
-                if hand.isTempai() and hand.isIrreducible():
-                    waitingPattern.add(tuple(leftAtattchSuit.suit))
-                    waitingPattern.add(tuple(leftAtattchSuit.getReverseSuit().suit))
+        if suit.getRange() > 7:
+            setWaitingPatern(waitingPattern, waitingNumber, suit)
+            setWaitingPatern(waitingPattern, waitingNumber, suit.getReverseSuit())
 
-                rightAttachSuit = suit.getRightAttachSuit()
-                hand = Hand.Hand(rightAttachSuit, False)
-                if hand.isTempai() and hand.isIrreducible():
-                    waitingPattern.add(tuple(rightAttachSuit.suit))
-                    waitingPattern.add(tuple(rightAttachSuit.getReverseSuit().suit))
-            else:
-                waitingPattern.add(tuple(suit.suit))
-                waitingPattern.add(tuple(suit.getReverseSuit().suit))
+            suit = SuitLoop.nextSuit(suit)
+            if suit.suit == firstSuit:
+                break
+
+            continue
+
+        setSuit = suit.getOneLeftSuit()
+        for index in range(8 - suit.getRange()):
+            setSuit = setSuit.getOneRightSuit()
+            setWaitingPatern(waitingPattern, waitingNumber, setSuit)
+            setWaitingPatern(waitingPattern, waitingNumber, setSuit.getReverseSuit())
+
+        leftAtattchSuit = suit.getOneLeftSuit()
+        hand = Hand.Hand(leftAtattchSuit, False)
+        if hand.isTempai() and hand.isIrreducible():
+            setWaitingPatern(waitingPattern, waitingNumber, leftAtattchSuit)
+            setWaitingPatern(waitingPattern, waitingNumber, leftAtattchSuit.getReverseSuit())
+
+        rightAttachSuit = suit.getRightAttachSuit()
+        hand = Hand.Hand(rightAttachSuit, False)
+        if hand.isTempai() and hand.isIrreducible():
+            setWaitingPatern(waitingPattern, waitingNumber, rightAttachSuit)
+            setWaitingPatern(waitingPattern, waitingNumber, rightAttachSuit.getReverseSuit())
 
         suit = SuitLoop.nextSuit(suit)
-        if (suit.suit == firstSuit):
+        if suit.suit == firstSuit:
             break
 
     return waitingPattern
 
-waitingPattern = set()
-waitingPattern |= getWaitingPattern(1)
-waitingPattern |= getWaitingPattern(2)
-waitingPattern |= getWaitingPattern(4)
-waitingPattern |= getWaitingPattern(5)
-waitingPattern |= getWaitingPattern(7)
-waitingPattern |= getWaitingPattern(8)
-waitingPattern |= getWaitingPattern(10)
-waitingPattern |= getWaitingPattern(11)
-waitingPattern |= getWaitingPattern(13)
 
-for t in waitingPattern:
-    print(t)
+waitingPattern = {}
+getWaitingPattern(waitingPattern, 1)
+getWaitingPattern(waitingPattern, 2)
+getWaitingPattern(waitingPattern, 4)
+getWaitingPattern(waitingPattern, 5)
+getWaitingPattern(waitingPattern, 7)
+getWaitingPattern(waitingPattern, 8)
+getWaitingPattern(waitingPattern, 10)
+getWaitingPattern(waitingPattern, 11)
+getWaitingPattern(waitingPattern, 13)
+
+print(waitingPattern)
 print(len(waitingPattern))

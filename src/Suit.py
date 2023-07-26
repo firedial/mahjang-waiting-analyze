@@ -90,6 +90,13 @@ class Suit:
 
         return lastIndex - firstIndex + 1
 
+    def getPosition(self) -> bool:
+        for index in range(self.length()):
+            if self.suit[index] != 0:
+                return index
+
+        raise ValueError("Suit is all zero.")
+
     def isBasicForm(self) -> bool:
         """
         基本形かどうかを判定する
