@@ -10,7 +10,7 @@ def getWaitingPattern(waitingPatterns: dict, number: int):
     suit = SuitLoop.getFirstSuit(number)
     firstSuit = suit
 
-    count = 0
+    count = -1
     while True:
         count += 1
         waitingNumber = count * 100 + number
