@@ -12,7 +12,7 @@ class Hand:
     isAtamaConnectedShuntsu: bool
     waiting: Waiting
 
-    def __init__(self, suit: Suit, isAtamaConnectedShuntsu: bool):
+    def __init__(self, suit: Suit, isAtamaConnectedShuntsu: bool = False):
         object.__setattr__(self, "waiting", Agari.getWaiting(suit))
         object.__setattr__(self, "suit", suit)
         object.__setattr__(self, "isAtamaConnectedShuntsu", isAtamaConnectedShuntsu)
