@@ -5,7 +5,7 @@ class TestBlock(unittest.TestCase):
     def test_init(self):
         # 長さが0であるブロック
         with self.assertRaises(ValueError):
-            Block.Block([])
+            Block.Block(tuple())
 
         # 長さ10のブロック
         with self.assertRaises(ValueError):
