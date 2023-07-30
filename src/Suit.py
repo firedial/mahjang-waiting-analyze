@@ -90,7 +90,7 @@ class Suit:
 
         return lastIndex - firstIndex + 1
 
-    def getPosition(self) -> bool:
+    def getPosition(self) -> int:
         for index in range(self.length()):
             if self.suit[index] != 0:
                 return index

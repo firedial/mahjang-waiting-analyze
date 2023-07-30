@@ -1,4 +1,4 @@
-import src.Suit as Suit
+from src.Suit import Suit
 
 """
 牌形を全パターン舐めるアルゴリズム(通称: 牌くるくる)
@@ -50,13 +50,13 @@ def nextSuit(suit: Suit) -> Suit:
         Suit: 次の数牌
     """
 
-    nextSuit = suit.suit.copy()
+    nextSuit = list(suit.suit)
 
     while True:
         # 牌形の先頭が 0 かどうかで処理が分かれる
         nextSuit = nextSuitNonZeroFirst(nextSuit) if suit.isFirstTIleZero() else nextSuitNonZeroFirst(nextSuit)
         try:
-            return Suit.Suit(nextSuit)
+            return Suit(tuple(nextSuit))
         except:
             continue
 
