@@ -35,3 +35,9 @@ class TestAgari(unittest.TestCase):
         waiting = Agari.getWaiting(suit)
         self.assertEqual(waiting.waitingCount, (1, 3, 3, 3, 3, 3, 3, 3, 1))
         self.assertFalse(waiting.isSendable)
+
+        # 4枚使いは聴牌にならない
+        suit = Suit((0, 4, 0, 0, 0, 0, 0, 0, 0))
+        waiting = Agari.getWaiting(suit)
+        self.assertEqual(waiting.waitingCount, (0, 0, 0, 0, 0, 0, 0, 0, 0))
+        self.assertFalse(waiting.isSendable)
