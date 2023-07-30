@@ -26,6 +26,9 @@ class Hand:
     def isRegularForm(self) -> bool:
         return self.suit.isRegularForm()
 
+    def hasAtamaConnectedShuntsuPattern(self) -> bool:
+        return self.waiting.isSendable() and self.suit.sum() >= 5 and self.suit.sum() <= 8
+
     def getWaitingTileCountWithAtama(self) -> int:
         return self.waiting.getWaitingTileCount() + ((2 if self.isAtamaConnectedShuntsu else 1) if self.waiting.isSendable else 0)
 
