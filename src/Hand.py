@@ -29,7 +29,7 @@ class Hand:
     def getWaitingTileCountWithAtama(self) -> bool:
         return self.waiting.getWaitingTileCount() + ((2 if self.isAtamaConnectedShuntsu else 1) if self.waiting.isSendable else 0)
 
-    def isIrreducible(self):
+    def isIrreducible(self) -> bool:
         def isFormIrreducible(self, suits: list[Suit], isAtamaConnectedShuntsu: bool):
             for suit in suits:
                 removedHand = Hand(suit, isAtamaConnectedShuntsu)
@@ -49,7 +49,7 @@ class Hand:
 
         return True
 
-    def __lt__(self, other):
+    def __lt__(self, other) -> bool:
         # あがり牌に昇格した場合(和了牌だが4枚使いだった場合)は待ちに関係する
         for (a, b) in zip(self.waiting.waitingCount, other.waiting.waitingCount):
             if a >= 1 and b == 0:
