@@ -62,4 +62,4 @@ def getWaiting(suit: Suit) -> Waiting:
         else:
             waitingCount.append(0)
 
-    return Waiting.Waiting(waitingCount, isAgari(suit))
+    return Waiting.Waiting(tuple(waitingCount), isAgari(suit))

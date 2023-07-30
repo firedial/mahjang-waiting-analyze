@@ -4,13 +4,13 @@ from typing import ClassVar
 @dataclass(frozen=True)
 class Waiting:
 
-    waitingCount: list[int]
+    waitingCount: tuple[int, ...]
     isSendable: bool
 
     MAX_TILE_COUNT: ClassVar[int] = 4
     HAND_LENGTH: ClassVar[int] = 9
 
-    def __init__(self, waitingCount: list[int], isSendable: bool):
+    def __init__(self, waitingCount: tuple[int, ...], isSendable: bool):
         if len(waitingCount) != self.HAND_LENGTH:
             raise ValueError("Wrong waitingCount length.")
 
