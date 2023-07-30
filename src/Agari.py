@@ -1,6 +1,6 @@
 from src.Suit import Suit
+from src.Waiting import Waiting
 import src.Remove as Remove
-import src.Waiting as Waiting
 
 def isAgari(suit: Suit) -> bool:
     """
@@ -62,4 +62,4 @@ def getWaiting(suit: Suit) -> Waiting:
         else:
             waitingCount.append(0)
 
-    return Waiting.Waiting(tuple(waitingCount), isAgari(suit))
+    return Waiting(tuple(waitingCount), isAgari(suit))

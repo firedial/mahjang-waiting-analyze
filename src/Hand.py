@@ -26,7 +26,7 @@ class Hand:
     def isRegularForm(self) -> bool:
         return self.suit.isRegularForm()
 
-    def getWaitingTileCountWithAtama(self) -> bool:
+    def getWaitingTileCountWithAtama(self) -> int:
         return self.waiting.getWaitingTileCount() + ((2 if self.isAtamaConnectedShuntsu else 1) if self.waiting.isSendable else 0)
 
     def isIrreducible(self) -> bool:
