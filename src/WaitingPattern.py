@@ -1,4 +1,4 @@
-import src.Hand as Hand
+from src.Hand import Hand
 import src.SuitLoop as SuitLoop
 
 
@@ -15,17 +15,33 @@ def getWaitingPattern(waitingPattern: dict, number: int):
         count += 1
         waitingNumber = count * 100 + number
 
-        # 基本形ではい時は考慮外
+        # 基本形ではない時は考慮外
         if not suit.isBasicForm():
             continue
 
-        # 基本形、聴牌形、既約系でなければ考慮外
-        hand = Hand.Hand(suit)
-        if not (hand.isBasicForm() and hand.isTempai() and hand.isIrreducible()):
+        # 範囲が8の時は両接地を考える
+        if suit.getRange() == 8:
+            # 右接地パターン
+            hand = Hand(suit)
+            if hand.isTempai() and hand.isIrreducible():
+                setWaitingPatern(waitingPattern, waitingNumber, suit)
+                setWaitingPatern(waitingPattern, waitingNumber, suit.getReverseSuit())
+
+            # 左接地パターン
+            leftAtattchSuit = suit.getOneLeftSuit()
+            hand = Hand(leftAtattchSuit)
+            if hand.isTempai() and hand.isIrreducible():
+                setWaitingPatern(waitingPattern, waitingNumber, leftAtattchSuit)
+                setWaitingPatern(waitingPattern, waitingNumber, leftAtattchSuit.getReverseSuit())
             continue
 
-        # 範囲が8以上の時はその形だけを登録
-        if suit.getRange() > 7:
+        # 聴牌形、既約系でなければ考慮外
+        hand = Hand(suit)
+        if not (hand.isTempai() and hand.isIrreducible()):
+            continue
+
+        # 範囲が9の時はその形だけを登録
+        if suit.getRange() == 9:
             setWaitingPatern(waitingPattern, waitingNumber, suit)
             setWaitingPatern(waitingPattern, waitingNumber, suit.getReverseSuit())
             continue
@@ -50,14 +66,14 @@ def getWaitingPattern(waitingPattern: dict, number: int):
 
         # 左接地は聴牌形で既約形かどうかをみる
         leftAtattchSuit = suit.getOneLeftSuit()
-        hand = Hand.Hand(leftAtattchSuit)
+        hand = Hand(leftAtattchSuit)
         if hand.isTempai() and hand.isIrreducible():
             setWaitingPatern(waitingPattern, waitingNumber, leftAtattchSuit)
             setWaitingPatern(waitingPattern, waitingNumber, leftAtattchSuit.getReverseSuit())
 
         # 右接地も聴牌形で既約形かどうかをみる
         rightAttachSuit = suit.getRightAttachSuit()
-        hand = Hand.Hand(rightAttachSuit)
+        hand = Hand(rightAttachSuit)
         if hand.isTempai() and hand.isIrreducible():
             setWaitingPatern(waitingPattern, waitingNumber, rightAttachSuit)
             setWaitingPatern(waitingPattern, waitingNumber, rightAttachSuit.getReverseSuit())
