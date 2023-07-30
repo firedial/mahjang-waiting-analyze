@@ -132,7 +132,7 @@ class TestSuit(unittest.TestCase):
         self.assertTrue(suit.isBasicForm())
 
         suit = Suit((4, 4, 3, 4, 0, 0, 2, 3, 0))
-        self.assertTrue(suit.isBasicForm())
+        self.assertFalse(suit.isBasicForm())
 
         suit = Suit((4, 4, 3, 4, 0, 0, 2, 3, 1))
         self.assertTrue(suit.isBasicForm())

@@ -97,6 +97,12 @@ class Suit:
 
         raise ValueError("Suit is all zero.")
 
+    def isWaitingBasicForm(self) -> bool:
+        if self.getRange() == self.SUIT_LENGTH - 1:
+            return self.getSuitGravityPosition() >= 0
+
+        return self.isBasicForm()
+
     def isBasicForm(self) -> bool:
         """
         基本形かどうかを判定する
@@ -104,9 +110,8 @@ class Suit:
         判定方法:
             1. 後方重心なら基本形ではない
             2. 両接地なら基本形
-            3. ゆとり 1 なら基本形
-            4. 2 番目から始まっていたら基本形
-            5. それ以外は基本形ではない
+            3. 2 番目から始まっていたら基本形
+            4. それ以外は基本形ではない
 
         Returns:
             bool: 基本形であれば True / そうでないとき False
@@ -121,10 +126,6 @@ class Suit:
 
         # 両接地なら基本形
         if suit[0] != 0 and suit[-1] != 0:
-            return True
-
-        # ゆとりが 1 の時も基本形
-        if (suit[0] == 0 and suit[1] != 0 and suit[-1] != 0) or (suit[0] != 0 and suit[-2] != 0 and suit[-1] == 0):
             return True
 
         # 2番目から始まっていた場合基本形
