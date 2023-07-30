@@ -11,12 +11,16 @@ def getWaitingPattern(waitingPatterns: dict, number: int):
     firstSuit = suit
 
     count = 0
-    while (suit := SuitLoop.nextSuit(suit)) != firstSuit:
+    while True:
         count += 1
         waitingNumber = count * 100 + number
 
         # 基本形ではない時は考慮外
         if not suit.isBasicForm():
+            suit = SuitLoop.nextSuit(suit)
+            if suit == firstSuit:
+                break
+
             continue
 
         # 範囲が8の時は両接地を考える
@@ -33,26 +37,29 @@ def getWaitingPattern(waitingPatterns: dict, number: int):
             if hand.isTempai() and hand.isIrreducible():
                 setWaitingPatern(waitingPatterns, waitingNumber, leftAtattchSuit)
                 setWaitingPatern(waitingPatterns, waitingNumber, leftAtattchSuit.getReverseSuit())
+
+            suit = SuitLoop.nextSuit(suit)
+            if suit == firstSuit:
+                break
+
             continue
 
         # 聴牌形、既約系でなければ考慮外
         hand = Hand(suit)
         if not (hand.isTempai() and hand.isIrreducible()):
+            suit = SuitLoop.nextSuit(suit)
+            if suit == firstSuit:
+                break
+
             continue
 
         # 範囲が9の時はその形だけを登録
         if suit.getRange() == 9:
             setWaitingPatern(waitingPatterns, waitingNumber, suit)
             setWaitingPatern(waitingPatterns, waitingNumber, suit.getReverseSuit())
-            continue
-
-        # 範囲が7以下のときは、移動系と右接地と左接地について見る
-        # 移動形は無条件で登録
-        setSuit = suit.getOneLeftSuit()
-        for _ in range(8 - suit.getRange()):
-            setSuit = setSuit.getOneRightSuit()
-            setWaitingPatern(waitingPatterns, waitingNumber, setSuit)
-            setWaitingPatern(waitingPatterns, waitingNumber, setSuit.getReverseSuit())
+            suit = SuitLoop.nextSuit(suit)
+            if suit == firstSuit:
+                break
 
             continue
 
@@ -77,6 +84,10 @@ def getWaitingPattern(waitingPatterns: dict, number: int):
         if hand.isTempai() and hand.isIrreducible():
             setWaitingPatern(waitingPatterns, waitingNumber, rightAttachSuit)
             setWaitingPatern(waitingPatterns, waitingNumber, rightAttachSuit.getReverseSuit())
+
+        suit = SuitLoop.nextSuit(suit)
+        if suit == firstSuit:
+            break
 
 def main():
     waitingPatterns = {}
