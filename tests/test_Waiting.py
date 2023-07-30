@@ -1,7 +1,7 @@
 import unittest
 from src.Waiting import Waiting
 
-class TestSuit(unittest.TestCase):
+class TestWaiting(unittest.TestCase):
     def test_init(self):
         # 長さ8の手牌
         with self.assertRaises(ValueError):
