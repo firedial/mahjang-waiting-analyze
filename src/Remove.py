@@ -19,7 +19,7 @@ def getRemovedBlockPatterns(suit: Suit, block: Block) -> list[Suit]:
     removedSuits: list[Suit] = []
 
     for x in range(0, loopCount):
-        tmpSuit = suit.suit[:]
+        tmpSuit = list(suit.suit)
         for index, count in enumerate(block.block):
             # 数牌から牌を除去する
             tmpSuit[x + index] -= count
@@ -28,7 +28,7 @@ def getRemovedBlockPatterns(suit: Suit, block: Block) -> list[Suit]:
                 break
         else:
             # 全て 0 以上なのでリストに追加する
-            removedSuits.append(Suit(tmpSuit))
+            removedSuits.append(Suit(tuple(tmpSuit)))
 
     return removedSuits
 
