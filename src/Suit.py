@@ -4,11 +4,11 @@ from typing import ClassVar, Optional
 @dataclass(frozen=True)
 class Suit:
 
-    suit: list[int]
+    suit: tuple[int, ...]
     MAX_TILE_COUNT: ClassVar[int] = 4
     SUIT_LENGTH: ClassVar[int] = 9
 
-    def __init__(self, suit: list[int]):
+    def __init__(self, suit: tuple[int, ...]):
         if len(suit) != self.SUIT_LENGTH:
             raise ValueError("Wrong suit length.")
 
@@ -41,12 +41,12 @@ class Suit:
         if index < 0 or index >= self.SUIT_LENGTH:
             raise ValueError("Invalid index.")
 
-        resultSuit = self.suit.copy()
+        resultSuit = list(self.suit)
         resultSuit[index] += 1
         if resultSuit[index] > self.MAX_TILE_COUNT:
             return None
 
-        return Suit(resultSuit)
+        return Suit(tuple(resultSuit))
 
     def getOneLeftSuit(self):
         resultSuit = []
@@ -54,14 +54,14 @@ class Suit:
             resultSuit.append(self.suit[index])
 
         resultSuit.append(0)
-        return Suit(resultSuit)
+        return Suit(tuple(resultSuit))
 
     def getOneRightSuit(self):
         resultSuit = [0]
         for index in range(0, self.length() - 1):
             resultSuit.append(self.suit[index])
 
-        return Suit(resultSuit)
+        return Suit(tuple(resultSuit))
 
     def getRightAttachSuit(self):
         resultSuit = self
@@ -71,9 +71,9 @@ class Suit:
         return resultSuit
 
     def getReverseSuit(self):
-        resultSuit = self.suit.copy()
+        resultSuit = list(self.suit)
         resultSuit.reverse()
-        return Suit(resultSuit)
+        return Suit(tuple(resultSuit))
 
     def getRange(self) -> int:
         fisrtIndex = 0
@@ -112,7 +112,7 @@ class Suit:
             bool: 基本形であれば True / そうでないとき False
         """
 
-        suit = self.suit.copy()
+        suit = list(self.suit)
         gravity: int = self.getSuitGravityPosition()
 
         # 後方重心なら基本形ではない
@@ -154,7 +154,7 @@ class Suit:
 
         """
         suitLength: int = self.length()
-        suit = self.suit.copy()
+        suit = list(self.suit)
 
         first: int = 0
         last: int = suitLength - 1
