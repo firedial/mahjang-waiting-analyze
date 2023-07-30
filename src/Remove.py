@@ -61,7 +61,7 @@ def getRemovedAtamaPatterns(suit: Suit) -> list[Suit]:
     Returns:
         lits[Suit]: 数牌から面子のパターンを省いた牌形のリスト
     """
-    return getRemovedBlockPatterns(suit, Block([2]))
+    return getRemovedBlockPatterns(suit, Block((2, )))
 
 def getRemovedAtamaConnectedShuntsuPatterns(suit: Suit) -> list[Suit]:
     """
@@ -73,7 +73,7 @@ def getRemovedAtamaConnectedShuntsuPatterns(suit: Suit) -> list[Suit]:
     Returns:
         lits[Suit]: 牌形から雀頭接続順子のパターンを省いた数牌のリスト
     """
-    return getRemovedMultiBlockPatterns(suit, [Block([3, 1, 1, 0]), Block([0, 1, 1, 3])])
+    return getRemovedMultiBlockPatterns(suit, [Block((3, 1, 1, 0)), Block((0, 1, 1, 3))])
 
 def getRemovedMentsuPatterns(suit: Suit) -> list[Suit]:
     """
@@ -85,4 +85,4 @@ def getRemovedMentsuPatterns(suit: Suit) -> list[Suit]:
     Returns:
         lits[Suit]: 牌形から面子のパターンを省いた数牌のリスト
     """
-    return getRemovedMultiBlockPatterns(suit, [Block([3]), Block([1, 1, 1])])
+    return getRemovedMultiBlockPatterns(suit, [Block((3, )), Block((1, 1, 1))])
