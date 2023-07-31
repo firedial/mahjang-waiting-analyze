@@ -2,19 +2,11 @@ from src.Hand import Hand
 import src.SuitLoop as SuitLoop
 
 
-def setWaitingPatern(waitingPatterns: dict, waitingNumber: int, suit):
-    waitingPatterns[tuple(suit.suit)] = {"suit": suit.suit, "number": waitingNumber, "position": suit.getPosition(), "gravity": suit.getSuitGravityPosition()}
-
-
-def getWaitingPattern(waitingPatterns: dict, number: int):
+def getWaitingPatterns(waitingPatterns: list, number: int):
     suit = SuitLoop.getFirstSuit(number)
     firstSuit = suit
 
-    count = -1
     while True:
-        count += 1
-        waitingNumber = count * 100 + number
-
         # 基本形ではない時は考慮外
         if not suit.isBasicForm():
             suit = SuitLoop.nextSuit(suit)
@@ -26,17 +18,19 @@ def getWaitingPattern(waitingPatterns: dict, number: int):
         # 範囲が8の時は両接地を考える
         if suit.getRange() == 8:
             # 右接地パターン
-            hand = Hand(suit)
-            if hand.isTempai() and hand.isIrreducible():
-                setWaitingPatern(waitingPatterns, waitingNumber, suit)
-                setWaitingPatern(waitingPatterns, waitingNumber, suit.getReverseSuit())
+            rightAttachHand = Hand(suit)
+            isRightIrreducible = rightAttachHand.isTempai() and rightAttachHand.isIrreducible()
 
             # 左接地パターン
-            leftAtattchSuit = suit.getOneLeftSuit()
-            hand = Hand(leftAtattchSuit)
-            if hand.isTempai() and hand.isIrreducible():
-                setWaitingPatern(waitingPatterns, waitingNumber, leftAtattchSuit)
-                setWaitingPatern(waitingPatterns, waitingNumber, leftAtattchSuit.getReverseSuit())
+            leftAttachHand = Hand(suit.getOneLeftSuit())
+            isLeftIrreducible = leftAttachHand.isTempai() and leftAttachHand.isIrreducible()
+
+            if isRightIrreducible or isLeftIrreducible:
+                waitingPatterns.append({"suit": suit.suit, "right": isRightIrreducible, "left": isLeftIrreducible, "isACS": False})
+                # 雀頭接続順子のパターンの考慮
+                if rightAttachHand.hasAtamaConnectedShuntsuPattern():
+                    waitingPatterns.append({"suit": suit.suit, "right": isRightIrreducible, "left": isLeftIrreducible, "isACS": True})
+
 
             suit = SuitLoop.nextSuit(suit)
             if suit == firstSuit:
@@ -55,8 +49,11 @@ def getWaitingPattern(waitingPatterns: dict, number: int):
 
         # 範囲が9の時はその形だけを登録
         if suit.getRange() == 9:
-            setWaitingPatern(waitingPatterns, waitingNumber, suit)
-            setWaitingPatern(waitingPatterns, waitingNumber, suit.getReverseSuit())
+            waitingPatterns.append({"suit": suit.suit, "right": True, "left": True, "isACS": False})
+            # 雀頭接続順子のパターンの考慮
+            if rightAttachHand.hasAtamaConnectedShuntsuPattern():
+                waitingPatterns.append({"suit": suit.suit, "right": True, "left": True, "isACS": True})
+
             suit = SuitLoop.nextSuit(suit)
             if suit == firstSuit:
                 break
@@ -64,42 +61,34 @@ def getWaitingPattern(waitingPatterns: dict, number: int):
             continue
 
         # 範囲が7以下のときは、移動系と右接地と左接地について見る
-        # 移動形は無条件で登録
-        setSuit = suit.getOneLeftSuit()
-        for _ in range(8 - suit.getRange()):
-            setSuit = setSuit.getOneRightSuit()
-            setWaitingPatern(waitingPatterns, waitingNumber, setSuit)
-            setWaitingPatern(waitingPatterns, waitingNumber, setSuit.getReverseSuit())
+        # 右接地パターン
+        rightAttachHand = Hand(suit.getRightAttachSuit())
+        isRightIrreducible = rightAttachHand.isTempai() and rightAttachHand.isIrreducible()
 
-        # 左接地は聴牌形で既約形かどうかをみる
-        leftAtattchSuit = suit.getOneLeftSuit()
-        hand = Hand(leftAtattchSuit)
-        if hand.isTempai() and hand.isIrreducible():
-            setWaitingPatern(waitingPatterns, waitingNumber, leftAtattchSuit)
-            setWaitingPatern(waitingPatterns, waitingNumber, leftAtattchSuit.getReverseSuit())
+        # 左接地パターン
+        leftAttachHand = Hand(suit.getOneLeftSuit())
+        isLeftIrreducible = leftAttachHand.isTempai() and leftAttachHand.isIrreducible()
 
-        # 右接地も聴牌形で既約形かどうかをみる
-        rightAttachSuit = suit.getRightAttachSuit()
-        hand = Hand(rightAttachSuit)
-        if hand.isTempai() and hand.isIrreducible():
-            setWaitingPatern(waitingPatterns, waitingNumber, rightAttachSuit)
-            setWaitingPatern(waitingPatterns, waitingNumber, rightAttachSuit.getReverseSuit())
+        waitingPatterns.append({"suit": suit.suit, "right": isRightIrreducible, "left": isLeftIrreducible, "isACS": False})
+        # 雀頭接続順子のパターンの考慮
+        if rightAttachHand.hasAtamaConnectedShuntsuPattern():
+            waitingPatterns.append({"suit": suit.suit, "right": isRightIrreducible, "left": isLeftIrreducible, "isACS": True})
 
         suit = SuitLoop.nextSuit(suit)
         if suit == firstSuit:
             break
 
 def main():
-    waitingPatterns = {}
-    getWaitingPattern(waitingPatterns, 1)
-    getWaitingPattern(waitingPatterns, 2)
-    getWaitingPattern(waitingPatterns, 4)
-    getWaitingPattern(waitingPatterns, 5)
-    getWaitingPattern(waitingPatterns, 7)
-    getWaitingPattern(waitingPatterns, 8)
-    getWaitingPattern(waitingPatterns, 10)
-    getWaitingPattern(waitingPatterns, 11)
-    getWaitingPattern(waitingPatterns, 13)
+    waitingPatterns = []
+    getWaitingPatterns(waitingPatterns, 1)
+    getWaitingPatterns(waitingPatterns, 2)
+    getWaitingPatterns(waitingPatterns, 4)
+    getWaitingPatterns(waitingPatterns, 5)
+    getWaitingPatterns(waitingPatterns, 7)
+    getWaitingPatterns(waitingPatterns, 8)
+    getWaitingPatterns(waitingPatterns, 10)
+    getWaitingPatterns(waitingPatterns, 11)
+    getWaitingPatterns(waitingPatterns, 13)
 
     return waitingPatterns
 
