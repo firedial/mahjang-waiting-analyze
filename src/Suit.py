@@ -103,6 +103,17 @@ class Suit:
 
         return self.isBasicForm()
 
+    def getSuitNumberWithACS(self, isAcs: bool) -> bool:
+        leftAttachedSuit = self if self.getRange() == 9 else self.getOneLeftSuit()
+
+        countMap = {1: 9, 2: 8, 4: 7, 5: 6, 7: 5, 8: 4, 10: 3, 11: 2, 13: 1}
+        handCount = self.sum() + (2 if not self.isRegularForm() else 0) + (3 if isAcs else 0)
+        number = countMap[handCount] * 10 + countMap[self.sum()]
+        for tile in leftAttachedSuit.suit:
+            number = number * 10 + tile
+
+        return number
+
     def isBasicForm(self) -> bool:
         """
         基本形かどうかを判定する

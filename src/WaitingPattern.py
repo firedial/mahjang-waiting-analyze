@@ -2,6 +2,16 @@ from src.Hand import Hand
 import src.SuitLoop as SuitLoop
 
 
+def setWaitingNumber(waitingPatterns: list) -> list:
+    sortedPatterns = sorted(waitingPatterns, key = lambda x: x['suitNumber'], reverse = True)
+    count = 0
+    for pattern in sortedPatterns:
+        count += 1
+        pattern["number"] = f"W{count:03}"
+        pattern.pop("suitNumber")
+
+    return sortedPatterns
+
 def getWaitingPatterns(waitingPatterns: list, number: int):
     suit = SuitLoop.getFirstSuit(number)
     firstSuit = suit
@@ -15,8 +25,23 @@ def getWaitingPatterns(waitingPatterns: list, number: int):
 
             continue
 
-        # 範囲が8の時は両接地を考える
-        if suit.getRange() == 8:
+
+        if suit.getRange() == 9:
+            # 聴牌形、既約系でなければ考慮外
+            hand = Hand(suit)
+            if not (hand.isTempai() and hand.isIrreducible()):
+                suit = SuitLoop.nextSuit(suit)
+                if suit == firstSuit:
+                    break
+
+                continue
+
+            isRightIrreducible = True
+            isLeftIrreducible = True
+
+        elif suit.getRange() == 8:
+            # 範囲が8の時は両接地を考える
+
             # 右接地パターン
             rightAttachHand = Hand(suit)
             isRightIrreducible = rightAttachHand.isTempai() and rightAttachHand.isIrreducible()
@@ -25,54 +50,39 @@ def getWaitingPatterns(waitingPatterns: list, number: int):
             leftAttachHand = Hand(suit.getOneLeftSuit())
             isLeftIrreducible = leftAttachHand.isTempai() and leftAttachHand.isIrreducible()
 
-            if isRightIrreducible or isLeftIrreducible:
-                waitingPatterns.append({"suit": suit.suit, "right": isRightIrreducible, "left": isLeftIrreducible, "isACS": False})
-                # 雀頭接続順子のパターンの考慮
-                if rightAttachHand.hasAtamaConnectedShuntsuPattern():
-                    waitingPatterns.append({"suit": suit.suit, "right": isRightIrreducible, "left": isLeftIrreducible, "isACS": True})
+            # どっちに接地していても既約でない場合は登録しない
+            if (not isRightIrreducible) and (not isLeftIrreducible):
+                suit = SuitLoop.nextSuit(suit)
+                if suit == firstSuit:
+                    break
+
+                continue
+
+        else:
+            # 範囲が7以下のときは、移動系と右接地と左接地について見る
+
+            # 聴牌形、既約系でなければ考慮外
+            hand = Hand(suit)
+            if not (hand.isTempai() and hand.isIrreducible()):
+                suit = SuitLoop.nextSuit(suit)
+                if suit == firstSuit:
+                    break
+
+                continue
+
+            # 右接地パターン
+            rightAttachHand = Hand(suit.getRightAttachSuit())
+            isRightIrreducible = rightAttachHand.isTempai() and rightAttachHand.isIrreducible()
+
+            # 左接地パターン
+            leftAttachHand = Hand(suit.getOneLeftSuit())
+            isLeftIrreducible = leftAttachHand.isTempai() and leftAttachHand.isIrreducible()
 
 
-            suit = SuitLoop.nextSuit(suit)
-            if suit == firstSuit:
-                break
-
-            continue
-
-        # 聴牌形、既約系でなければ考慮外
-        hand = Hand(suit)
-        if not (hand.isTempai() and hand.isIrreducible()):
-            suit = SuitLoop.nextSuit(suit)
-            if suit == firstSuit:
-                break
-
-            continue
-
-        # 範囲が9の時はその形だけを登録
-        if suit.getRange() == 9:
-            waitingPatterns.append({"suit": suit.suit, "right": True, "left": True, "isACS": False})
-            # 雀頭接続順子のパターンの考慮
-            if rightAttachHand.hasAtamaConnectedShuntsuPattern():
-                waitingPatterns.append({"suit": suit.suit, "right": True, "left": True, "isACS": True})
-
-            suit = SuitLoop.nextSuit(suit)
-            if suit == firstSuit:
-                break
-
-            continue
-
-        # 範囲が7以下のときは、移動系と右接地と左接地について見る
-        # 右接地パターン
-        rightAttachHand = Hand(suit.getRightAttachSuit())
-        isRightIrreducible = rightAttachHand.isTempai() and rightAttachHand.isIrreducible()
-
-        # 左接地パターン
-        leftAttachHand = Hand(suit.getOneLeftSuit())
-        isLeftIrreducible = leftAttachHand.isTempai() and leftAttachHand.isIrreducible()
-
-        waitingPatterns.append({"suit": suit.suit, "right": isRightIrreducible, "left": isLeftIrreducible, "isACS": False})
+        waitingPatterns.append({"suit": suit.suit, "left": isLeftIrreducible, "right": isRightIrreducible, "isAcs": False, "suitNumber": suit.getSuitNumberWithACS(False)})
         # 雀頭接続順子のパターンの考慮
-        if rightAttachHand.hasAtamaConnectedShuntsuPattern():
-            waitingPatterns.append({"suit": suit.suit, "right": isRightIrreducible, "left": isLeftIrreducible, "isACS": True})
+        if hand.hasAtamaConnectedShuntsuPattern():
+            waitingPatterns.append({"suit": suit.suit, "left": isLeftIrreducible, "right": isRightIrreducible, "isAcs": True, "suitNumber": suit.getSuitNumberWithACS(True)})
 
         suit = SuitLoop.nextSuit(suit)
         if suit == firstSuit:
@@ -89,6 +99,4 @@ def main():
     getWaitingPatterns(waitingPatterns, 10)
     getWaitingPatterns(waitingPatterns, 11)
     getWaitingPatterns(waitingPatterns, 13)
-
-    return waitingPatterns
-
+    return setWaitingNumber(waitingPatterns)
