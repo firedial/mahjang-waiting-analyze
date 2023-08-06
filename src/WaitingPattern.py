@@ -12,6 +12,7 @@ def setWaitingNumber(waitingPatterns: list) -> list:
 
     return sortedPatterns
 
+
 def getWaitingPatterns(waitingPatterns: list, number: int):
     suit = SuitLoop.getFirstSuit(number)
     firstSuit = suit
@@ -24,7 +25,6 @@ def getWaitingPatterns(waitingPatterns: list, number: int):
                 break
 
             continue
-
 
         if suit.getRange() == 9:
             # 聴牌形、既約系でなければ考慮外
@@ -61,14 +61,9 @@ def getWaitingPatterns(waitingPatterns: list, number: int):
         else:
             # 範囲が7以下のときは、移動系と右接地と左接地について見る
 
-            # 聴牌形、既約系でなければ考慮外
+            # 無接地パターン
             hand = Hand(suit)
-            if not (hand.isTempai() and hand.isIrreducible()):
-                suit = SuitLoop.nextSuit(suit)
-                if suit == firstSuit:
-                    break
-
-                continue
+            isCenterIrreducible = hand.isTempai() and hand.isIrreducible()
 
             # 右接地パターン
             rightAttachHand = Hand(suit.getRightAttachSuit())
@@ -78,6 +73,17 @@ def getWaitingPatterns(waitingPatterns: list, number: int):
             leftAttachHand = Hand(suit.getOneLeftSuit())
             isLeftIrreducible = leftAttachHand.isTempai() and leftAttachHand.isIrreducible()
 
+            # 無接地は既約じゃないが、接地パターンが既約になる場合はない想定
+            if not isCenterIrreducible and (isRightIrreducible or isLeftIrreducible):
+                raise RuntimeError("Unexpected error.")
+
+            # 既約でない場合は登録しない
+            if not isCenterIrreducible:
+                suit = SuitLoop.nextSuit(suit)
+                if suit == firstSuit:
+                    break
+
+                continue
 
         waitingPatterns.append({"suit": suit.suit, "left": isLeftIrreducible, "right": isRightIrreducible, "isAcs": False, "suitNumber": suit.getSuitNumberWithACS(False)})
         # 雀頭接続順子のパターンの考慮
@@ -87,6 +93,7 @@ def getWaitingPatterns(waitingPatterns: list, number: int):
         suit = SuitLoop.nextSuit(suit)
         if suit == firstSuit:
             break
+
 
 def main():
     waitingPatterns = []
