@@ -1,6 +1,7 @@
 from src.Suit import Suit
 from src.Block import Block
 
+
 def getRemovedBlockPatterns(suit: Suit, block: Block) -> list[Suit]:
     """
     数牌から牌を除去できるパターンのリストを返す
@@ -32,6 +33,7 @@ def getRemovedBlockPatterns(suit: Suit, block: Block) -> list[Suit]:
 
     return removedSuits
 
+
 def getRemovedMultiBlockPatterns(suit: Suit, blocks: list[Block]) -> list[Suit]:
     """
     数牌から牌を除去できるパターンのリストを返す
@@ -51,6 +53,7 @@ def getRemovedMultiBlockPatterns(suit: Suit, blocks: list[Block]) -> list[Suit]:
 
     return removedSuits
 
+
 def getRemovedAtamaPatterns(suit: Suit) -> list[Suit]:
     """
     雀頭のパターンを省けるだけ省いた数牌のリストを返す
@@ -63,6 +66,7 @@ def getRemovedAtamaPatterns(suit: Suit) -> list[Suit]:
     """
     return getRemovedBlockPatterns(suit, Block((2, )))
 
+
 def getRemovedAtamaConnectedShuntsuPatterns(suit: Suit) -> list[Suit]:
     """
     雀頭接続順子のパターンを省けるだけ省いた数牌のリストを返す
@@ -74,6 +78,7 @@ def getRemovedAtamaConnectedShuntsuPatterns(suit: Suit) -> list[Suit]:
         lits[Suit]: 牌形から雀頭接続順子のパターンを省いた数牌のリスト
     """
     return getRemovedMultiBlockPatterns(suit, [Block((3, 1, 1, 0)), Block((0, 1, 1, 3))])
+
 
 def getRemovedMentsuPatterns(suit: Suit) -> list[Suit]:
     """
