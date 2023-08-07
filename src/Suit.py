@@ -1,5 +1,6 @@
 from dataclasses import dataclass
-from typing import ClassVar, Optional
+from typing import ClassVar
+
 
 @dataclass(frozen=True)
 class Suit:
@@ -44,6 +45,18 @@ class Suit:
         resultSuit = list(self.suit)
         resultSuit[index] += 1
         if resultSuit[index] > self.MAX_TILE_COUNT:
+            return None
+
+        return Suit(tuple(resultSuit))
+
+    # @todo 返り値の型を付ける
+    def subTile(self, index: int, count: int):
+        if index < 0 or index >= self.SUIT_LENGTH:
+            raise ValueError("Invalid index.")
+
+        resultSuit = list(self.suit)
+        resultSuit[index] -= count
+        if resultSuit[index] < 0:
             return None
 
         return Suit(tuple(resultSuit))
@@ -195,3 +208,17 @@ class Suit:
 
         # 左右対称形
         return 0
+
+    def findFirstNumber(self, number):
+        for index in range(self.SUIT_LENGTH):
+            if self.suit[index] == number:
+                return index
+
+        return None
+
+    def __sub__(self, other):
+        suit = []
+        for index in range(self.SUIT_LENGTH):
+            suit.append(self.suit[index] - other.suit[index])
+
+        return Suit(tuple(suit))
