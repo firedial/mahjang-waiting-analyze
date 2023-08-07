@@ -57,7 +57,7 @@ def nextSuit(suit: Suit) -> Suit:
         nextSuit = nextSuitNonZeroFirst(nextSuit) if suit.isFirstTIleZero() else nextSuitNonZeroFirst(nextSuit)
         try:
             return Suit(tuple(nextSuit))
-        except:
+        except ValueError:
             continue
 
 
@@ -94,6 +94,7 @@ def nextSuitNonZeroFirst(suit: list[int]) -> list[int]:
     suit[suitLength - 1] = first
     return suit
 
+
 def nextSuitZeroFirst(suit: list[int]) -> list[int]:
     """
     数牌の先頭が 0 である時の処理
@@ -117,7 +118,6 @@ def nextSuitZeroFirst(suit: list[int]) -> list[int]:
             suit[index - 1] = 1
             return suit
         index += 1
-
 
     # ここに来ることはない
     raise RuntimeError("Unexpected error.")

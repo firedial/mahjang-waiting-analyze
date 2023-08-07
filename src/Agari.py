@@ -2,6 +2,7 @@ from src.Suit import Suit
 from src.Waiting import Waiting
 import src.Remove as Remove
 
+
 def isAgari(suit: Suit) -> bool:
     """
     渡された数牌が和了形であるかどうかを判定する

@@ -76,7 +76,7 @@ class Suit:
         return Suit(tuple(resultSuit))
 
     def getRange(self) -> int:
-        fisrtIndex = 0
+        firstIndex = 0
         for index in range(self.length()):
             if self.suit[index] != 0:
                 firstIndex = index
@@ -145,7 +145,6 @@ class Suit:
 
         # それ以外は基本形ではない
         return False
-
 
     def getSuitGravityPosition(self) -> int:
         """
