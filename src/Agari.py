@@ -64,3 +64,32 @@ def getWaiting(suit: Suit) -> Waiting:
             waitingCount.append(0)
 
     return Waiting(tuple(waitingCount), isAgari(suit))
+
+
+def isShampon(suit: Suit, index: int) -> bool:
+    addedTileSuit = suit.addTile(index)
+
+    # 追加できなかった場合
+    if addedTileSuit is None:
+        return False
+
+    # 刻子にできない場合
+    if addedTileSuit.suit[index] < 3:
+        return False
+
+    return isAgari(addedTileSuit.subTile(index, 3))
+
+
+def isRyanmen(suit: Suit, index: int, isFormer: bool) -> bool:
+    addedTileSuit = suit.addTile(index)
+    direction = 1 if isFormer else -1
+
+    # 追加できなかった場合
+    if addedTileSuit is None:
+        return False
+
+    # 順子にできない場合
+    if addedTileSuit.suit[index] < 1 or addedTileSuit.suit[index + direction * 1] < 1 or addedTileSuit.suit[index + direction * 2] < 1:
+        return False
+
+    return isAgari(addedTileSuit.subTile(index, 1).subTile(index + direction * 1, 1).subTile(index + direction * 2, 1))
