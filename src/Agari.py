@@ -55,15 +55,15 @@ def getWaiting(suit: Suit) -> Waiting:
 
         # 追加できなかったときは次のループへ
         if addedTileSuit is None:
-            waitingCount.append(0)
+            waitingCount.append(False)
             continue
 
         if isAgari(addedTileSuit):
-            waitingCount.append(suit.getRemainTileCount(index))
+            waitingCount.append(True)
         else:
-            waitingCount.append(0)
+            waitingCount.append(False)
 
-    return Waiting(tuple(waitingCount), isAgari(suit))
+    return Waiting(tuple(waitingCount))
 
 
 def isShampon(suit: Suit, index: int) -> bool:

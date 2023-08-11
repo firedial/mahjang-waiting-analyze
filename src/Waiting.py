@@ -5,25 +5,24 @@ from typing import ClassVar
 @dataclass(frozen=True)
 class Waiting:
 
-    waitingCount: tuple[int, ...]
-    isSendable: bool
+    waitings: tuple[bool, ...]
 
-    MAX_TILE_COUNT: ClassVar[int] = 4
     HAND_LENGTH: ClassVar[int] = 9
 
-    def __init__(self, waitingCount: tuple[int, ...], isSendable: bool):
-        if len(waitingCount) != self.HAND_LENGTH:
-            raise ValueError("Wrong waitingCount length.")
+    def __init__(self, waitings: tuple[bool, ...]):
+        if len(waitings) != self.HAND_LENGTH:
+            raise ValueError("Wrong waitings length.")
 
-        for tile in waitingCount:
-            if tile > self.MAX_TILE_COUNT or tile < 0:
-                raise ValueError("Wrong waitingCount count.")
-
-        object.__setattr__(self, "waitingCount", waitingCount)
-        object.__setattr__(self, "isSendable", isSendable)
-
-    def isTempai(self) -> bool:
-        return self.isSendable or sum(self.waitingCount) > 0
+        object.__setattr__(self, "waitings", waitings)
 
     def getWaitingTileCount(self) -> int:
-        return len(list(filter(lambda x: x > 0, self.waitingCount)))
+        return len(list(filter(lambda x: x, self.waitings)))
+
+    def getWaitingAddTile(self, index):
+        return Waiting(self.waitings[:index] + (True, ) + self.waitings[(index + 1):])
+
+    def __eq__(self, other) -> bool:
+        return self.waitings == other.waitings
+
+    def __ne__(self, other) -> bool:
+        return self != other

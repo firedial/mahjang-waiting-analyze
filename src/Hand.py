@@ -1,24 +1,32 @@
 from dataclasses import dataclass
-from typing import ClassVar, Optional
 from src.Suit import Suit
 from src.Waiting import Waiting
 import src.Remove as Remove
 import src.Agari as Agari
+from functools import cached_property
+
 
 @dataclass(frozen=True)
 class Hand:
 
     suit: Suit
-    isAtamaConnectedShuntsu: bool
-    waiting: Waiting
 
-    def __init__(self, suit: Suit, isAtamaConnectedShuntsu: bool = False):
-        object.__setattr__(self, "waiting", Agari.getWaiting(suit))
+    def __init__(self, suit: Suit):
         object.__setattr__(self, "suit", suit)
-        object.__setattr__(self, "isAtamaConnectedShuntsu", isAtamaConnectedShuntsu)
+
+    @cached_property
+    def waiting(self) -> Waiting:
+        return Agari.getWaiting(self.suit)
+
+    @cached_property
+    def isSendable(self) -> bool:
+        return Agari.isAgari(self.suit)
 
     def isTempai(self) -> bool:
-        return self.waiting.isTempai()
+        return self.waiting.getWaitingTileCount() > 0
+
+    def isRyanmen(self, index, isFormer) -> bool:
+        return Agari.isRyanmen(self.suit, index, isFormer)
 
     def isBasicForm(self) -> bool:
         return self.suit.isBasicForm()
@@ -27,17 +35,14 @@ class Hand:
         return self.suit.isRegularForm()
 
     def hasAtamaConnectedShuntsuPattern(self) -> bool:
-        return self.waiting.isSendable and self.suit.sum() >= 5 and self.suit.sum() <= 8
-
-    def getWaitingTileCountWithAtama(self) -> int:
-        return self.waiting.getWaitingTileCount() + ((2 if self.isAtamaConnectedShuntsu else 1) if self.waiting.isSendable else 0)
+        return self.isSendable and self.suit.sum() >= 5 and self.suit.sum() <= 8
 
     def isIrreducible(self) -> bool:
         def isFormIrreducible(self, suits: list[Suit], isAtamaConnectedShuntsu: bool):
             for suit in suits:
-                removedHand = Hand(suit, isAtamaConnectedShuntsu)
+                removedHand = Hand(suit)
 
-                if not (removedHand < self):
+                if removedHand == self:
                     return False
             else:
                 return True
@@ -52,10 +57,43 @@ class Hand:
 
         return True
 
-    def __lt__(self, other) -> bool:
-        # あがり牌に昇格した場合(和了牌だが4枚使いだった場合)は待ちに関係する
-        for (a, b) in zip(self.waiting.waitingCount, other.waiting.waitingCount):
-            if a >= 1 and b == 0:
-                return True
+    def __eq__(self, other) -> bool:
+        removedSuit = other.suit - self.suit
 
-        return self.getWaitingTileCountWithAtama() != other.getWaitingTileCountWithAtama()
+        # 面子だった場合は待ちが変わっていないことだけ見ればいい
+        if removedSuit.sum() == 3:
+            return self.waiting == other.waiting
+
+        # 雀頭だった場合
+        if removedSuit.sum() == 2:
+            index2 = removedSuit.findFirstNumber(2)
+            if Agari.isShampon(other.suit, index2):
+                addedWaiting = self.waiting.getWaitingAddTile(index2)
+                return addedWaiting == other.waiting
+            else:
+                return self.waiting == other.waiting
+
+        # 雀頭接続順子だった場合
+        if removedSuit.sum() == 5:
+            index3 = removedSuit.findFirstNumber(3)
+            index1 = removedSuit.findFirstNumber(1)
+
+            # 311 パターン
+            if index3 < index1:
+                if Agari.isShampon(other.suit, index3) and Agari.isRyanmen(other.suit, index3, True) and Agari.isRyanmen(other.suit, index3 + 2, False):
+                    addedWaiting = self.waiting.getWaitingAddTile(index1).getWaitingAddTile(index3)
+                    return addedWaiting == other.waiting
+                else:
+                    return self.waiting == other.waiting
+            # 113 パターン
+            else:
+                if Agari.isShampon(other.suit, index3) and Agari.isRyanmen(other.suit, index3, False) and Agari.isRyanmen(other.suit, index3 - 2, True):
+                    addedWaiting = self.waiting.getWaitingAddTile(index1).getWaitingAddTile(index3)
+                    return addedWaiting == other.waiting
+                else:
+                    return self.waiting == other.waiting
+
+        raise ValueError("Invalid pattern.")
+
+    def __ne__(self, other) -> bool:
+        return self != other
