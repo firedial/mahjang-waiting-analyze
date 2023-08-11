@@ -23,7 +23,7 @@ class Hand:
         return Agari.isAgari(self.suit)
 
     def isTempai(self) -> bool:
-        return self.waiting.getWaitingTileCount() > 0
+        return self.waiting.getWaitingTileCount() > 0 or self.isSendable
 
     def isRyanmen(self, index, isFormer) -> bool:
         return Agari.isRyanmen(self.suit, index, isFormer)
@@ -62,7 +62,7 @@ class Hand:
 
         # 面子だった場合は待ちが変わっていないことだけ見ればいい
         if removedSuit.sum() == 3:
-            return self.waiting == other.waiting
+            return self.waiting == other.waiting and self.isSendable == other.isSendable
 
         # 雀頭だった場合
         if removedSuit.sum() == 2:
@@ -80,15 +80,15 @@ class Hand:
 
             # 311 パターン
             if index3 < index1:
-                if Agari.isShampon(other.suit, index3) and Agari.isRyanmen(other.suit, index3, True) and Agari.isRyanmen(other.suit, index3 + 2, False):
-                    addedWaiting = self.waiting.getWaitingAddTile(index1).getWaitingAddTile(index3)
+                if Agari.isShampon(other.suit, index3) and Agari.isRyanmen(other.suit, index3, True) and Agari.isRyanmen(other.suit, index3 + 3, False):
+                    addedWaiting = self.waiting.getWaitingAddTile(index1 + 2).getWaitingAddTile(index3)
                     return addedWaiting == other.waiting
                 else:
                     return self.waiting == other.waiting
             # 113 パターン
             else:
-                if Agari.isShampon(other.suit, index3) and Agari.isRyanmen(other.suit, index3, False) and Agari.isRyanmen(other.suit, index3 - 2, True):
-                    addedWaiting = self.waiting.getWaitingAddTile(index1).getWaitingAddTile(index3)
+                if Agari.isShampon(other.suit, index3) and Agari.isRyanmen(other.suit, index3, False) and Agari.isRyanmen(other.suit, index3 - 3, True):
+                    addedWaiting = self.waiting.getWaitingAddTile(index1 - 1).getWaitingAddTile(index3)
                     return addedWaiting == other.waiting
                 else:
                     return self.waiting == other.waiting

@@ -41,6 +41,7 @@ def getWaitingPatterns(waitingPatterns: list, number: int):
 
         elif suit.getRange() == 8:
             # 範囲が8の時は両接地を考える
+            hand = Hand(suit)
 
             # 右接地パターン
             rightAttachHand = Hand(suit)
