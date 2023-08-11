@@ -1,11 +1,14 @@
 import src.WaitingPattern as WaitingPattern
+import csv
 
 result = WaitingPattern.main()
 
-f = open('result/waitingPattern.py', 'w')
-f.write("def getWaitingPatterns():\n    return [\n")
-for waiting in result:
-    print("        ", file = f, end = "")
-    print(waiting, file = f, end = ",\n")
-f.write("    ]")
-f.close()
+csvForm = []
+for value in result:
+    value['suit'] = ''.join(map(lambda x: str(x), value['suit']))
+    csvForm.append(value)
+
+with open('result/waitingPattern.csv', 'w') as f:
+    writer = csv.DictWriter(f, ['number', 'suit', 'left', 'right', 'isAcs'])
+    writer.writeheader()
+    writer.writerows(csvForm)
