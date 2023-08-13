@@ -30,8 +30,12 @@ class WaitingPatternUtil:
         suit = hand.suit
 
         positionNumber = suit.getPosition()
+
+        # 長さが 9 の時は両接地
+        if suit.getRange() == 9:
+            position = "b"
         # 左接地系
-        if positionNumber == 0:
+        elif positionNumber == 0:
             position = "l"
         # 右接地系
         elif positionNumber + suit.getRange() == 9:

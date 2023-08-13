@@ -132,6 +132,9 @@ class Suit:
         if self.getSuitGravityPosition() == -1:
             suit = self.getReverseSuit()
 
+        if suit.getRange() == 9:
+            return suit
+
         position = suit.getPosition()
         if position == 0:
             return suit.getOneRightSuit()
