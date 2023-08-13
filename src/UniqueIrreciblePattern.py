@@ -3,74 +3,38 @@ from src.Suit import Suit
 import src.Remove as Remove
 import src.SuitLoop as SuitLoop
 import result.waitingPattern
+from src.WaitingPatternUtil import WaitingPatternUtil
+import csv
 
-def getAllWaitingPatterns() -> dict:
-    waitingPatterns = result.waitingPattern.getWaitingPatterns()
-    allWaitingPatterns = {}
-    for waitingPattern in waitingPatterns:
-        suit = Suit(waitingPattern["suit"])
 
-        if suit.getRange() == 9:
-            allWaitingPatterns[(suit.suit, waitingPattern["isAcs"])] = {"suit": suit.suit, "isAcs": waitingPattern["isAcs"], "number": waitingPattern["number"]}
-            allWaitingPatterns[(suit.getReverseSuit().suit, waitingPattern["isAcs"])] = {"suit": suit.getReverseSuit().suit, "isAcs": waitingPattern["isAcs"], "number": waitingPattern["number"]}
-        elif suit.getRange() == 8:
-            if waitingPattern["right"]:
-                allWaitingPatterns[(suit.suit, waitingPattern["isAcs"])] = {"suit": suit.suit, "isAcs": waitingPattern["isAcs"], "number": waitingPattern["number"]}
-                allWaitingPatterns[(suit.getReverseSuit().suit, waitingPattern["isAcs"])] = {"suit": suit.getReverseSuit().suit, "isAcs": waitingPattern["isAcs"], "number": waitingPattern["number"]}
-            if waitingPattern["left"]:
-                suit = suit.getOneLeftSuit()
-                allWaitingPatterns[(suit.suit, waitingPattern["isAcs"])] = {"suit": suit.suit, "isAcs": waitingPattern["isAcs"], "number": waitingPattern["number"]}
-                allWaitingPatterns[(suit.getReverseSuit().suit, waitingPattern["isAcs"])] = {"suit": suit.getReverseSuit().suit, "isAcs": waitingPattern["isAcs"], "number": waitingPattern["number"]}
-        else:
-            suit = suit.getOneLeftSuit()
-            if waitingPattern["left"]:
-                allWaitingPatterns[(suit.suit, waitingPattern["isAcs"])] = {"suit": suit.suit, "isAcs": waitingPattern["isAcs"], "number": waitingPattern["number"]}
-                allWaitingPatterns[(suit.getReverseSuit().suit, waitingPattern["isAcs"])] = {"suit": suit.getReverseSuit().suit, "isAcs": waitingPattern["isAcs"], "number": waitingPattern["number"]}
+def getIrreducibles(hand: Hand, waitingPatternUtil: WaitingPatternUtil):
+    waitingNumber = waitingPatternUtil.getWaitingPatternNumber(hand)
+    if waitingNumber is not None:
+        return set([waitingNumber])
 
-            for _ in range(8 - suit.getRange()):
-                suit = suit.getOneRightSuit()
-                allWaitingPatterns[(suit.suit, waitingPattern["isAcs"])] = {"suit": suit.suit, "isAcs": waitingPattern["isAcs"], "number": waitingPattern["number"]}
-                allWaitingPatterns[(suit.getReverseSuit().suit, waitingPattern["isAcs"])] = {"suit": suit.getReverseSuit().suit, "isAcs": waitingPattern["isAcs"], "number": waitingPattern["number"]}
-
-            suit = suit.getOneRightSuit()
-            if waitingPattern["right"]:
-                allWaitingPatterns[(suit.suit, waitingPattern["isAcs"])] = {"suit": suit.suit, "isAcs": waitingPattern["isAcs"], "number": waitingPattern["number"]}
-                allWaitingPatterns[(suit.getReverseSuit().suit, waitingPattern["isAcs"])] = {"suit": suit.getReverseSuit().suit, "isAcs": waitingPattern["isAcs"], "number": waitingPattern["number"]}
-
-    return allWaitingPatterns
-
-def getIrreducibles(suit: Suit, allWaitingPatterns: dict):
-    if (suit.suit, False) in allWaitingPatterns:
-        t = tuple((suit.suit, False))
-        s = set()
-        s.add(t)
-        return s
-
-    hand = Hand(suit, False)
     result = set()
-
     if not hand.isTempai():
         return result
 
-    if suit.isRegularForm() and suit.sum() >= 10:
-        suits = Remove.getRemovedAtamaConnectedShuntsuPatterns(suit)
+    if hand.suit.isRegularForm() and hand.suit.sum() >= 10:
+        suits = Remove.getRemovedAtamaConnectedShuntsuPatterns(hand.suit)
         for checkSuit in suits:
             checkHand = Hand(checkSuit, True)
-            if not checkHand < hand:
-                result |= getIrreducibles(checkSuit, allWaitingPatterns)
+            if checkHand == hand:
+                result |= getIrreducibles(checkHand, waitingPatternUtil)
 
-    if suit.isRegularForm():
-        suits = Remove.getRemovedAtamaPatterns(suit)
+    if hand.suit.isRegularForm():
+        suits = Remove.getRemovedAtamaPatterns(hand.suit)
         for checkSuit in suits:
-            checkHand = Hand(checkSuit)
-            if not checkHand < hand:
-                result |= getIrreducibles(checkSuit, allWaitingPatterns)
+            checkHand = Hand(checkSuit, hand.isAtamaConnectedShuntsu)
+            if checkHand == hand:
+                result |= getIrreducibles(checkHand, waitingPatternUtil)
 
-    suits = Remove.getRemovedMentsuPatterns(suit)
+    suits = Remove.getRemovedMentsuPatterns(hand.suit)
     for checkSuit in suits:
-        checkHand = Hand(checkSuit)
-        if not checkHand < hand:
-            result |= getIrreducibles(checkSuit, allWaitingPatterns)
+        checkHand = Hand(checkSuit, hand.isAtamaConnectedShuntsu)
+        if checkHand == hand:
+            result |= getIrreducibles(checkHand, waitingPatternUtil)
 
     return result
 
@@ -79,12 +43,10 @@ def checkIrrecible(number: int):
     suit = SuitLoop.getFirstSuit(number)
     firstSuit = suit
 
-    allWaitingPatterns = getAllWaitingPatterns()
     irreducibleWaitings = {}
-
     while True:
-        irreducibles = getIrreducibles(suit, allWaitingPatterns)
-        if len(set(map(lambda x: allWaitingPatterns[x]['number'], irreducibles))) > 0:
+        irreducibles = getIrreducibles(Hand(suit), WaitingPatternUtil())
+        if len(irreducibles) > 0:
             irreducibleWaitings[suit.suit] = irreducibles
 
         suit = SuitLoop.nextSuit(suit)
@@ -92,6 +54,7 @@ def checkIrrecible(number: int):
             break
 
     return irreducibleWaitings
+
 
 def main():
     irreducibleWaitings = {}
