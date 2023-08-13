@@ -67,7 +67,9 @@ class Hand:
         # 雀頭だった場合
         if removedSuit.sum() == 2:
             index2 = removedSuit.findFirstNumber(2)
-            if Agari.isShampon(other.suit, index2):
+            if self.isSendable and Agari.isShampon(other.suit, index2):
+                if self.waiting.waitings[index2]:
+                    return False
                 addedWaiting = self.waiting.getWaitingAddTile(index2)
                 return addedWaiting == other.waiting
             else:
@@ -80,14 +82,18 @@ class Hand:
 
             # 311 パターン
             if index3 < index1:
-                if Agari.isShampon(other.suit, index3) and Agari.isRyanmen(other.suit, index3, True) and Agari.isRyanmen(other.suit, index3 + 3, False):
+                if self.isSendable and Agari.isShampon(other.suit, index3) and Agari.isRyanmen(other.suit, index3, True) and Agari.isRyanmen(other.suit, index3 + 3, False):
+                    if self.waiting.waitings[index1 + 2] and self.waiting.waitings[index3]:
+                        return False
                     addedWaiting = self.waiting.getWaitingAddTile(index1 + 2).getWaitingAddTile(index3)
                     return addedWaiting == other.waiting
                 else:
                     return self.waiting == other.waiting
             # 113 パターン
             else:
-                if Agari.isShampon(other.suit, index3) and Agari.isRyanmen(other.suit, index3, False) and Agari.isRyanmen(other.suit, index3 - 3, True):
+                if self.isSendable and Agari.isShampon(other.suit, index3) and Agari.isRyanmen(other.suit, index3, False) and Agari.isRyanmen(other.suit, index3 - 3, True):
+                    if self.waiting.waitings[index1 - 1] and self.waiting.waitings[index3]:
+                        return False
                     addedWaiting = self.waiting.getWaitingAddTile(index1 - 1).getWaitingAddTile(index3)
                     return addedWaiting == other.waiting
                 else:
