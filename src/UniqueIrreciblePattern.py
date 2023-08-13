@@ -26,7 +26,7 @@ def getIrreducibles(hand: Hand, waitingPatternUtil: WaitingPatternUtil):
     if hand.suit.isRegularForm():
         suits = Remove.getRemovedAtamaPatterns(hand.suit)
         for checkSuit in suits:
-            checkHand = Hand(checkSuit, hand.isAtamaConnectedShuntsu)
+            checkHand = Hand(checkSuit, False)
             if checkHand == hand:
                 result |= getIrreducibles(checkHand, waitingPatternUtil)
 
@@ -45,9 +45,13 @@ def checkIrrecible(number: int):
 
     irreducibleWaitings = {}
     while True:
-        irreducibles = getIrreducibles(Hand(suit), WaitingPatternUtil())
+        hand = Hand(suit)
+        irreducibles = getIrreducibles(hand, WaitingPatternUtil())
         if len(irreducibles) > 0:
             irreducibleWaitings[suit.suit] = irreducibles
+
+        if len(irreducibles) == 0 and hand.isTempai():
+            raise RuntimeError("something wrong: " + str(suit.suit))
 
         suit = SuitLoop.nextSuit(suit)
         if suit == firstSuit:
