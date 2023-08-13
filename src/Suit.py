@@ -127,6 +127,21 @@ class Suit:
 
         return number
 
+    def getBasicFormSuit(self):
+        suit = self
+        if self.getSuitGravityPosition() == -1:
+            suit = self.getReverseSuit()
+
+        position = suit.getPosition()
+        if position == 0:
+            return suit.getOneRightSuit()
+        elif position == 1:
+            return suit
+        else:
+            for _ in range(position - 1):
+                suit = suit.getOneLeftSuit()
+            return suit
+
     def isBasicForm(self) -> bool:
         """
         基本形かどうかを判定する

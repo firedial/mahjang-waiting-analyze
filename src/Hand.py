@@ -10,9 +10,11 @@ from functools import cached_property
 class Hand:
 
     suit: Suit
+    isAtamaConnectedShuntsu: bool
 
-    def __init__(self, suit: Suit):
+    def __init__(self, suit: Suit, isAtamaConnectedShuntsu: bool = False):
         object.__setattr__(self, "suit", suit)
+        object.__setattr__(self, "isAtamaConnectedShuntsu", isAtamaConnectedShuntsu)
 
     @cached_property
     def waiting(self) -> Waiting:
