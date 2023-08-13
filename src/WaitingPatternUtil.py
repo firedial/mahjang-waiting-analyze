@@ -17,6 +17,8 @@ class WaitingPatternUtil:
             for value in patterns:
                 value['suit'] = tuple(int(x) for x in value['suit'])
                 value['isAcs'] = value['isAcs'] == 'True'
+                value['left'] = value['left'] == 'True'
+                value['right'] = value['right'] == 'True'
                 waitingPatterns.append(value)
 
 
@@ -46,7 +48,6 @@ class WaitingPatternUtil:
             direction = "d"
 
         basicFormSuit = suit.getBasicFormSuit()
-
         basicFormFiltered = list(filter(lambda x: x['suit'] == basicFormSuit.suit, acsFiltered))
 
         # なかった場合
@@ -55,6 +56,14 @@ class WaitingPatternUtil:
 
         # 一つあった場合
         if len(basicFormFiltered) == 1:
+            if (position == "l" and direction == "a") or (position == "r" and direction == "d"):
+                if not basicFormFiltered[0]['left']:
+                    return None
+
+            if (position == "l" and direction == "d") or (position == "r" and direction == "a"):
+                if not basicFormFiltered[0]['right']:
+                    return None
+
             return basicFormFiltered[0]['number'] + '-' + direction + position
 
         raise RuntimeError("something wrong")
