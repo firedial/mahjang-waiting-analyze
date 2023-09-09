@@ -104,4 +104,4 @@ class Hand:
         raise ValueError("Invalid pattern.")
 
     def __ne__(self, other) -> bool:
-        return self != other
+        return not (self == other)

@@ -25,4 +25,4 @@ class Waiting:
         return self.waitings == other.waitings
 
     def __ne__(self, other) -> bool:
-        return self != other
+        return not (self == other)
