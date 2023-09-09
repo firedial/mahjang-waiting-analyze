@@ -19,3 +19,9 @@ class WaitingType:
         object.__setattr__(self, "isKanchan", isKanchan)
         object.__setattr__(self, "isRyanmenLeft", isRyanmenLeft)
         object.__setattr__(self, "isRyanmenRight", isRyanmenRight)
+
+    def __eq__(self, other) -> bool:
+        return self.isTanki == other.isTanki and self.isShampon == other.isShampon and self.isKanchan == other.isKanchan and self.isRyanmenLeft == other.isRyanmenLeft and self.isRyanmenRight == other.isRyanmenRight
+
+    def __ne__(self, other) -> bool:
+        return not (self == other)

@@ -1,7 +1,7 @@
 import src.WaitingPattern as WaitingPattern
 import csv
 
-result = WaitingPattern.main()
+result = WaitingPattern.main(lambda x, y: y == x)
 
 csvForm = []
 for value in result:

@@ -13,7 +13,7 @@ def setWaitingNumber(waitingPatterns: list) -> list:
     return sortedPatterns
 
 
-def getWaitingPatterns(waitingPatterns: list, number: int):
+def getWaitingPatterns(waitingPatterns: list, number: int, isSameWaiting):
     suit = SuitLoop.getFirstSuit(number)
     firstSuit = suit
 
@@ -29,7 +29,7 @@ def getWaitingPatterns(waitingPatterns: list, number: int):
         if suit.getRange() == 9:
             # 聴牌形、既約系でなければ考慮外
             hand = Hand(suit)
-            if not (hand.isTempai() and hand.isIrreducible()):
+            if not (hand.isTempai() and hand.isIrreducibleWithJudgeFunction(isSameWaiting)):
                 suit = SuitLoop.nextSuit(suit)
                 if suit == firstSuit:
                     break
@@ -45,11 +45,11 @@ def getWaitingPatterns(waitingPatterns: list, number: int):
 
             # 右接地パターン
             rightAttachHand = Hand(suit)
-            isRightIrreducible = rightAttachHand.isTempai() and rightAttachHand.isIrreducible()
+            isRightIrreducible = rightAttachHand.isTempai() and rightAttachHand.isIrreducibleWithJudgeFunction(isSameWaiting)
 
             # 左接地パターン
             leftAttachHand = Hand(suit.getOneLeftSuit())
-            isLeftIrreducible = leftAttachHand.isTempai() and leftAttachHand.isIrreducible()
+            isLeftIrreducible = leftAttachHand.isTempai() and leftAttachHand.isIrreducibleWithJudgeFunction(isSameWaiting)
 
             # どっちに接地していても既約でない場合は登録しない
             if (not isRightIrreducible) and (not isLeftIrreducible):
@@ -64,15 +64,15 @@ def getWaitingPatterns(waitingPatterns: list, number: int):
 
             # 無接地パターン
             hand = Hand(suit)
-            isCenterIrreducible = hand.isTempai() and hand.isIrreducible()
+            isCenterIrreducible = hand.isTempai() and hand.isIrreducibleWithJudgeFunction(isSameWaiting)
 
             # 右接地パターン
             rightAttachHand = Hand(suit.getRightAttachSuit())
-            isRightIrreducible = rightAttachHand.isTempai() and rightAttachHand.isIrreducible()
+            isRightIrreducible = rightAttachHand.isTempai() and rightAttachHand.isIrreducibleWithJudgeFunction(isSameWaiting)
 
             # 左接地パターン
             leftAttachHand = Hand(suit.getOneLeftSuit())
-            isLeftIrreducible = leftAttachHand.isTempai() and leftAttachHand.isIrreducible()
+            isLeftIrreducible = leftAttachHand.isTempai() and leftAttachHand.isIrreducibleWithJudgeFunction(isSameWaiting)
 
             # 無接地は既約じゃないが、接地パターンが既約になる場合はない想定
             if not isCenterIrreducible and (isRightIrreducible or isLeftIrreducible):
@@ -96,15 +96,15 @@ def getWaitingPatterns(waitingPatterns: list, number: int):
             break
 
 
-def main():
+def main(isSameWaiting):
     waitingPatterns = []
-    getWaitingPatterns(waitingPatterns, 1)
-    getWaitingPatterns(waitingPatterns, 2)
-    getWaitingPatterns(waitingPatterns, 4)
-    getWaitingPatterns(waitingPatterns, 5)
-    getWaitingPatterns(waitingPatterns, 7)
-    getWaitingPatterns(waitingPatterns, 8)
-    getWaitingPatterns(waitingPatterns, 10)
-    getWaitingPatterns(waitingPatterns, 11)
-    getWaitingPatterns(waitingPatterns, 13)
+    getWaitingPatterns(waitingPatterns, 1, isSameWaiting)
+    getWaitingPatterns(waitingPatterns, 2, isSameWaiting)
+    getWaitingPatterns(waitingPatterns, 4, isSameWaiting)
+    getWaitingPatterns(waitingPatterns, 5, isSameWaiting)
+    getWaitingPatterns(waitingPatterns, 7, isSameWaiting)
+    getWaitingPatterns(waitingPatterns, 8, isSameWaiting)
+    getWaitingPatterns(waitingPatterns, 10, isSameWaiting)
+    getWaitingPatterns(waitingPatterns, 11, isSameWaiting)
+    getWaitingPatterns(waitingPatterns, 13, isSameWaiting)
     return setWaitingNumber(waitingPatterns)

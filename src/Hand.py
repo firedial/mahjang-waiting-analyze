@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 from src.Suit import Suit
 from src.Waiting import Waiting
+from src.WaitingStructure import WaitingStructure
 import src.Remove as Remove
 import src.Agari as Agari
 from functools import cached_property
@@ -21,6 +22,10 @@ class Hand:
         return Agari.getWaiting(self.suit)
 
     @cached_property
+    def waitingStructure(self) -> WaitingStructure:
+        return Agari.getWaitingStructure(self.suit)
+
+    @cached_property
     def isSendable(self) -> bool:
         return Agari.isAgari(self.suit)
 
@@ -39,12 +44,14 @@ class Hand:
     def hasAtamaConnectedShuntsuPattern(self) -> bool:
         return self.isSendable and self.suit.sum() >= 5 and self.suit.sum() <= 8
 
-    def isIrreducible(self) -> bool:
+    # @todo 関数が引数の型ヒントの書き方を調べる
+    # isSameWaiting: Hand -> Hand -> bool
+    def isIrreducibleWithJudgeFunction(self, isSameWaiting) -> bool:
         def isFormIrreducible(self, suits: list[Suit], isAtamaConnectedShuntsu: bool):
             for suit in suits:
                 removedHand = Hand(suit)
 
-                if removedHand == self:
+                if isSameWaiting(self, removedHand):
                     return False
             else:
                 return True
@@ -58,6 +65,10 @@ class Hand:
                 return False
 
         return True
+
+
+    def isIrreducible(self) -> bool:
+        return self.isIrreducibleWithJudgeFunction(lambda x, y: y == x)
 
     def __eq__(self, other) -> bool:
         removedSuit = other.suit - self.suit

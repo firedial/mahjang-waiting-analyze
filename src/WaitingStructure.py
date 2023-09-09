@@ -15,3 +15,12 @@ class WaitingStructure:
 
         object.__setattr__(self, "waitingStructures", waitingStructures)
 
+    def __eq__(self, other) -> bool:
+        for x, y in zip(self.waitingStructures, other.waitingStructures):
+            if x != y:
+                return False
+        else:
+            return True
+
+    def __ne__(self, other) -> bool:
+        return not (self == other)
