@@ -1,5 +1,7 @@
 from src.Suit import Suit
 from src.Waiting import Waiting
+from src.WaitingStructure import WaitingStructure
+from src.WaitingType import WaitingType
 import src.Remove as Remove
 
 
@@ -65,6 +67,27 @@ def getWaiting(suit: Suit) -> Waiting:
 
     return Waiting(tuple(waitingCount))
 
+
+def getWaitingStructure(suit: Suit) -> WaitingStructure:
+    waitingStructures = []
+    for index in range(suit.length()):
+        tankiJudgeSuit = suit.getTankiJudgeSuit(index)
+        shamponJudgeSuit = suit.getShamponJudgeSuit(index)
+        kanchanJudgeSuit = suit.getKanchanJudgeSuit(index)
+        ryanmenLeftJudgeSuit = suit.getRyanmenLeftJudgeSuit(index)
+        ryanmenRightJudgeSuit = suit.getRyanmenRightJudgeSuit(index)
+
+        waitingStructures.append(
+            WaitingType(
+                isTanki = False if tankiJudgeSuit is None else isAgari(tankiJudgeSuit),
+                isShampon = False if shamponJudgeSuit is None else isAgari(shamponJudgeSuit),
+                isKanchan = False if kanchanJudgeSuit is None else isAgari(kanchanJudgeSuit),
+                isRyanmenLeft = False if ryanmenLeftJudgeSuit is None else isAgari(ryanmenLeftJudgeSuit),
+                isRyanmenRight = False if ryanmenRightJudgeSuit is None else isAgari(ryanmenRightJudgeSuit),
+            )
+        )
+
+    return WaitingStructure(tuple(waitingStructures))
 
 def isShampon(suit: Suit, index: int) -> bool:
     addedTileSuit = suit.addTile(index)

@@ -240,3 +240,48 @@ class Suit:
             suit.append(self.suit[index] - other.suit[index])
 
         return Suit(tuple(suit))
+
+    def getTankiJudgeSuit(self, index: int):
+        if index < 0 or index >= self.SUIT_LENGTH:
+            return None
+
+        if self.suit[index] == 0:
+            return None
+
+        return Suit(self.suit[:index] + (self.suit[index] - 1, ) + self.suit[index + 1:])
+
+    def getShamponJudgeSuit(self, index: int):
+        if index < 0 or index >= self.SUIT_LENGTH:
+            return None
+
+        if self.suit[index] < 2:
+            return None
+
+        return Suit(self.suit[:index] + (self.suit[index] - 2, ) + self.suit[index + 1:])
+
+    def getKanchanJudgeSuit(self, index: int):
+        if index < 1 or index >= self.SUIT_LENGTH - 1:
+            return None
+
+        if self.suit[index - 1] == 0 or self.suit[index + 1] == 0:
+            return None
+
+        return Suit(self.suit[:index - 1] + (self.suit[index - 1] - 1, self.suit[index], self.suit[index + 1] - 1) + self.suit[index + 2:])
+
+    def getRyanmenLeftJudgeSuit(self, index: int):
+        if index < 0 or index >= self.SUIT_LENGTH - 2:
+            return None
+
+        if self.suit[index + 1] == 0 or self.suit[index + 2] == 0:
+            return None
+
+        return Suit(self.suit[:index] + (self.suit[index], self.suit[index + 1] - 1, self.suit[index + 2] - 1) + self.suit[index + 3:])
+
+    def getRyanmenRightJudgeSuit(self, index: int):
+        if index < 2 or index >= self.SUIT_LENGTH:
+            return None
+
+        if self.suit[index - 1] == 0 or self.suit[index - 2] == 0:
+            return None
+
+        return Suit(self.suit[:index - 2] + (self.suit[index - 2] - 1, self.suit[index - 1] - 1, self.suit[index]) + self.suit[index + 1:])
