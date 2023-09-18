@@ -30,8 +30,162 @@ class Suit:
     def sum(self) -> int:
         return sum(self.suit)
 
-    def __isFirstTIleZero(self) -> bool:
+    def isTempai(self) -> bool:
+        for tile, waitingType in zip(self.suit, self.waitingStructure.waitingStructures):
+            if tile < self.MAX_TILE_COUNT and waitingType.hasWaiting():
+                return True
+        else:
+            return False
+
+    def isRangeFull(self) -> bool:
+        return self.__getRange() == self.SUIT_LENGTH
+
+    def hasOneRoomRange(self) -> bool:
+        return self.__getRange() == self.SUIT_LENGTH - 1
+
+    def getLeftAttachSuit(self) -> Self:
+        suit = self
+        for _ in range(self.__getPosition()):
+            suit = suit.__getOneLeftSuit()
+
+        return suit
+
+    def getRightAttachSuit(self) -> Self:
+        suit = self
+        for _ in range(self.SUIT_LENGTH - self.__getPosition() - self.__getRange()):
+            suit = suit.__getOneRightSuit()
+
+        return suit
+
+    def __getOneLeftSuit(self) -> Self:
+        resultSuit = []
+        for index in range(1, self.length()):
+            resultSuit.append(self.suit[index])
+
+        resultSuit.append(0)
+        return Suit(tuple(resultSuit))
+
+    def __getOneRightSuit(self) -> Self:
+        resultSuit = [0]
+        for index in range(0, self.length() - 1):
+            resultSuit.append(self.suit[index])
+
+        return Suit(tuple(resultSuit))
+
+    def __getPosition(self) -> int:
+        for index in range(self.length()):
+            if self.suit[index] != 0:
+                return index
+
+        raise ValueError("Suit is all zero.")
+
+    def __getRange(self) -> int:
+        firstIndex = 0
+        for index in range(self.length()):
+            if self.suit[index] != 0:
+                firstIndex = index
+                break
+
+        lastIndex = self.length() - 1
+        for index in range(self.length()):
+            if self.suit[self.length() - 1 - index] != 0:
+                lastIndex = self.length() - 1 - index
+                break
+
+        return lastIndex - firstIndex + 1
+
+    def isFirstTIleZero(self) -> bool:
         return self.suit[0] == 0
+
+    # ---------------------------------------------------------------------------- #
+    # 標準形に関する処理 ここから
+    # ---------------------------------------------------------------------------- #
+
+    def isBasicForm(self) -> bool:
+        """
+        基本形かどうかを判定する
+
+        判定方法:
+            1. 後方重心なら基本形ではない
+            2. 両接地なら基本形
+            3. 2 番目から始まっていたら基本形
+            4. それ以外は基本形ではない
+
+        Returns:
+            bool: 基本形であれば True / そうでないとき False
+        """
+
+        suit = list(self.suit)
+        gravity: int = self.__getSuitGravityPosition()
+
+        # 後方重心なら基本形ではない
+        if gravity == -1:
+            return False
+
+        # 両接地なら基本形
+        if suit[0] != 0 and suit[-1] != 0:
+            return True
+
+        # 2番目から始まっていた場合基本形
+        if suit[0] == 0 and suit[1] != 0:
+            return True
+
+        # それ以外は基本形ではない
+        return False
+
+    def __getSuitGravityPosition(self) -> int:
+        """
+        数牌の重心を求める
+
+        両端に接地している連続する 0 を無視する。
+        両端から見て行った時、大きい数字がある方に重心がある。
+        同じ場合はさらに一つ内側で比較する。最後まで一緒なら左右対称形。
+
+        例:
+            [0, 2, 4, 0, 0] -> 後方重心
+            [0, 2, 2, 3, 2] -> 後方重心
+            [0, 2, 2, 1, 2] -> 前方重心
+            [0, 2, 1, 1, 2, 0, 0] -> 左右対称形
+
+        Returns:
+            int: 前方重心 1 / 左右対称 0 / 後方重心 -1
+
+        """
+        suitLength: int = self.length()
+        suit = list(self.suit)
+
+        first: int = 0
+        last: int = suitLength - 1
+
+        # 前から見たときに初めて 0 でない場所を見つける
+        while first < suitLength:
+            if suit[first] != 0:
+                break
+            first += 1
+
+        # 後ろから見たときに初めて 0 でない場所を見つける
+        while 0 <= last:
+            if suit[last] != 0:
+                break
+            last -= 1
+
+        # 両端から重心を見ていく
+        while first < last:
+            if suit[first] > suit[last]:
+                # 前方重心
+                return 1
+            if suit[first] < suit[last]:
+                # 後方重心
+                return -1
+            first += 1
+            last -= 1
+
+        # 左右対称形
+        return 0
+
+    # ---------------------------------------------------------------------------- #
+    # 標準形に関する処理 ここまで
+    # ---------------------------------------------------------------------------- #
 
     # ---------------------------------------------------------------------------- #
     # 牌除去に関する処理 ここから
@@ -284,12 +438,13 @@ class Suit:
         nextSuit = list(self.suit)
 
         while True:
+            # 牌形の先頭が 0 かどうかで処理が分かれる
+            nextSuit = self.__nextSuitNonZeroFirst() if self.__isFirstTIleZero() else self.__nextSuitNonZeroFirst()
+            print(nextSuit)
             try:
-                # 牌形の先頭が 0 かどうかで処理が分かれる
-                return Suit(tuple(self.__nextSuitNonZeroFirst() if self.__isFirstTIleZero() else self.__nextSuitNonZeroFirst()))
+                return Suit(tuple(nextSuit))
             except ValueError:
                 continue
-
 
     def __nextSuitNonZeroFirst(self) -> list[int]:
         """
@@ -321,7 +476,6 @@ class Suit:
         # 先頭以外で 0 が見つからなかった時は末尾を先頭の数字にする
         suit[suitLength - 1] = first
         return suit
-
 
     def __nextSuitZeroFirst(self) -> list[int]:
         """
@@ -374,4 +528,16 @@ class Suit:
 
     # ---------------------------------------------------------------------------- #
     # 牌くるくるに関する処理 ここまで
+    # ---------------------------------------------------------------------------- #
+
+    # ---------------------------------------------------------------------------- #
+    # 既約に関する処理 ここから
+    # ---------------------------------------------------------------------------- #
+
+    def isIrreducible(self) -> bool:
+        # @todo 後で実装する
+        return True
+
+    # ---------------------------------------------------------------------------- #
+    # 既約に関する処理 ここまで
     # ---------------------------------------------------------------------------- #

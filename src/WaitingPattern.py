@@ -1,5 +1,5 @@
-from src.Hand import Hand
-import src.SuitLoop as SuitLoop
+from src.util.Suit import Suit
+import src.util.SuitLoop as SuitLoop
 
 
 def setWaitingNumber(waitingPatterns: list) -> list:
@@ -18,6 +18,7 @@ def getWaitingPatterns(waitingPatterns: list, number: int, isSameWaiting):
     firstSuit = suit
 
     while True:
+        print(suit)
         # 基本形ではない時は考慮外
         if not suit.isBasicForm():
             suit = SuitLoop.nextSuit(suit)
@@ -26,10 +27,9 @@ def getWaitingPatterns(waitingPatterns: list, number: int, isSameWaiting):
 
             continue
 
-        if suit.getRange() == 9:
+        if suit.isRangeFull():
             # 聴牌形、既約系でなければ考慮外
-            hand = Hand(suit)
-            if not (hand.isTempai() and hand.isIrreducibleWithJudgeFunction(isSameWaiting)):
+            if not (suit.isTempai() and suit.isIrreducible()):
                 suit = SuitLoop.nextSuit(suit)
                 if suit == firstSuit:
                     break
@@ -39,17 +39,14 @@ def getWaitingPatterns(waitingPatterns: list, number: int, isSameWaiting):
             isRightIrreducible = True
             isLeftIrreducible = True
 
-        elif suit.getRange() == 8:
-            # 範囲が8の時は両接地を考える
-            hand = Hand(suit)
-
+        elif suit.hasOneRoomRange():
             # 右接地パターン
-            rightAttachHand = Hand(suit)
-            isRightIrreducible = rightAttachHand.isTempai() and rightAttachHand.isIrreducibleWithJudgeFunction(isSameWaiting)
+            rightAttachSuit = suit
+            isRightIrreducible = rightAttachSuit.isTempai() and rightAttachSuit.isIrreducible()
 
             # 左接地パターン
-            leftAttachHand = Hand(suit.getOneLeftSuit())
-            isLeftIrreducible = leftAttachHand.isTempai() and leftAttachHand.isIrreducibleWithJudgeFunction(isSameWaiting)
+            leftAttachSuit = suit.getLeftAttachSuit()
+            isLeftIrreducible = leftAttachSuit.isTempai() and leftAttachSuit.isIrreducible()
 
             # どっちに接地していても既約でない場合は登録しない
             if (not isRightIrreducible) and (not isLeftIrreducible):
@@ -63,16 +60,15 @@ def getWaitingPatterns(waitingPatterns: list, number: int, isSameWaiting):
             # 範囲が7以下のときは、移動系と右接地と左接地について見る
 
             # 無接地パターン
-            hand = Hand(suit)
-            isCenterIrreducible = hand.isTempai() and hand.isIrreducibleWithJudgeFunction(isSameWaiting)
+            isCenterIrreducible = suit.isTempai() and suit.isIrreducible()
 
             # 右接地パターン
-            rightAttachHand = Hand(suit.getRightAttachSuit())
-            isRightIrreducible = rightAttachHand.isTempai() and rightAttachHand.isIrreducibleWithJudgeFunction(isSameWaiting)
+            rightAttachSuit = suit.getRightAttachSuit()
+            isRightIrreducible = rightAttachSuit.isTempai() and rightAttachSuit.isIrreducible()
 
             # 左接地パターン
-            leftAttachHand = Hand(suit.getOneLeftSuit())
-            isLeftIrreducible = leftAttachHand.isTempai() and leftAttachHand.isIrreducibleWithJudgeFunction(isSameWaiting)
+            leftAttachSuit = suit.getLeftAttachSuit()
+            isLeftIrreducible = leftAttachSuit.isTempai() and leftAttachSuit.isIrreducible()
 
             # 無接地は既約じゃないが、接地パターンが既約になる場合はない想定
             if not isCenterIrreducible and (isRightIrreducible or isLeftIrreducible):
@@ -86,17 +82,15 @@ def getWaitingPatterns(waitingPatterns: list, number: int, isSameWaiting):
 
                 continue
 
-        waitingPatterns.append({"suit": suit.suit, "left": isLeftIrreducible, "right": isRightIrreducible, "isAcs": False, "suitNumber": suit.getSuitNumberWithACS(False)})
-        # 雀頭接続順子のパターンの考慮
-        if hand.hasAtamaConnectedShuntsuPattern():
-            waitingPatterns.append({"suit": suit.suit, "left": isLeftIrreducible, "right": isRightIrreducible, "isAcs": True, "suitNumber": suit.getSuitNumberWithACS(True)})
+        waitingPatterns.append({"suit": suit.suit, "left": isLeftIrreducible, "right": isRightIrreducible, "isAcs": False, "suitNumber": 1})
 
         suit = SuitLoop.nextSuit(suit)
         if suit == firstSuit:
             break
 
 
-def main(isSameWaiting):
+def main():
+    isSameWaiting = lambda x: True
     waitingPatterns = []
     getWaitingPatterns(waitingPatterns, 1, isSameWaiting)
     getWaitingPatterns(waitingPatterns, 2, isSameWaiting)
