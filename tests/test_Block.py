@@ -1,5 +1,5 @@
 import unittest
-import src.Block as Block
+import src.util.Block as Block
 
 class TestBlock(unittest.TestCase):
     def test_init(self):

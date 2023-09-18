@@ -1,6 +1,6 @@
 import unittest
-from src.Suit import Suit
-import src.SuitLoop as SuitLoop
+from src.util.Suit import Suit
+import src.util.SuitLoop as SuitLoop
 
 class TestSuitLoop(unittest.TestCase):
     def test_nextSuit(self):
