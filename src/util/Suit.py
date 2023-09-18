@@ -36,6 +36,13 @@ class Suit:
         else:
             return False
 
+    def isTempaiWithoutTileCount(self) -> bool:
+        for waitingType in self.waitingStructure.waitingStructures:
+            if waitingType.hasWaiting():
+                return True
+        else:
+            return False
+
     def isSendable(self) -> bool:
         return self.__isAgari()
 

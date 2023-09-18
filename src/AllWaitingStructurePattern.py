@@ -33,7 +33,7 @@ def getWaitingStructureString(waitingStructure: WaitingStructure) -> str:
 
 def getWaitingPatterns(suit: Suit):
     # 基本形かつ聴牌形ではない時は考慮外
-    if not suit.isBasicForm() or not suit.isTempai():
+    if not suit.isBasicForm() or not suit.isTempaiWithoutTileCount():
         return None
 
     return {"suit": suit.getLeftAttachSuit().suit, "waitingStructure": getWaitingStructureString(suit.getLeftAttachSuit().waitingStructure), "suitNumber": suit.getSuitNumber()}
