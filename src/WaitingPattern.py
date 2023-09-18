@@ -87,7 +87,6 @@ def main():
     getWaitingPatternsLoop(waitingPatterns, 4)
     getWaitingPatternsLoop(waitingPatterns, 5)
     getWaitingPatternsLoop(waitingPatterns, 7)
-    return setWaitingNumber(waitingPatterns)
     getWaitingPatternsLoop(waitingPatterns, 8)
     getWaitingPatternsLoop(waitingPatterns, 10)
     getWaitingPatternsLoop(waitingPatterns, 11)
