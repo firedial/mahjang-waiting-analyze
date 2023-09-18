@@ -58,6 +58,6 @@ for value in result:
     csvForm.append(value)
 
 with open('result/waitingPattern.csv', 'w') as f:
-    writer = csv.DictWriter(f, ['number', 'suit', 'left', 'right', 'isAcs'])
+    writer = csv.DictWriter(f, ['number', 'suit', 'left', 'right', 'isSendable'])
     writer.writeheader()
     writer.writerows(csvForm)
