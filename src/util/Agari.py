@@ -1,6 +1,7 @@
-from src.Suit import Suit
-from src.Waiting import Waiting
-import src.Remove as Remove
+from src.util.Suit import Suit
+from src.util.WaitingType import WaitingType
+from src.util.WaitingStructure import WaitingStructure
+import src.util.Remove as Remove
 
 def isAgari(suit: Suit) -> bool:
     """
@@ -45,21 +46,23 @@ def isAgari(suit: Suit) -> bool:
         return False
 
 
-def getWaiting(suit: Suit) -> Waiting:
-    waitingCount = []
-
+def getWaitingStructure(suit: Suit) -> WaitingStructure:
+    waitingStructures = []
     for index in range(suit.length()):
-        # 一枚牌を追加する
-        addedTileSuit = suit.addTile(index)
+        tankiJudgeSuit = suit.getTankiJudgeSuit(index)
+        shamponJudgeSuit = suit.getShamponJudgeSuit(index)
+        kanchanJudgeSuit = suit.getKanchanJudgeSuit(index)
+        ryanmenLeftJudgeSuit = suit.getRyanmenLeftJudgeSuit(index)
+        ryanmenRightJudgeSuit = suit.getRyanmenRightJudgeSuit(index)
 
-        # 追加できなかったときは次のループへ
-        if addedTileSuit is None:
-            waitingCount.append(0)
-            continue
+        waitingStructures.append(
+            WaitingType(
+                isTanki = False if tankiJudgeSuit is None else isAgari(tankiJudgeSuit),
+                isShampon = False if shamponJudgeSuit is None else isAgari(shamponJudgeSuit),
+                isKanchan = False if kanchanJudgeSuit is None else isAgari(kanchanJudgeSuit),
+                isRyanmenLeft = False if ryanmenLeftJudgeSuit is None else isAgari(ryanmenLeftJudgeSuit),
+                isRyanmenRight = False if ryanmenRightJudgeSuit is None else isAgari(ryanmenRightJudgeSuit),
+            )
+        )
 
-        if isAgari(addedTileSuit):
-            waitingCount.append(suit.getRemainTileCount(index))
-        else:
-            waitingCount.append(0)
-
-    return Waiting(tuple(waitingCount), isAgari(suit))
+    return WaitingStructure(tuple(waitingStructures))

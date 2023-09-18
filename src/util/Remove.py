@@ -1,5 +1,5 @@
-from src.Suit import Suit
-from src.Block import Block
+from src.util.Suit import Suit
+from src.util.Block import Block
 
 def getRemovedBlockPatterns(suit: Suit, block: Block) -> list[Suit]:
     """
