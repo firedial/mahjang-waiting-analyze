@@ -13,7 +13,7 @@ def setWaitingNumber(waitingPatterns: list) -> list:
     return sortedPatterns
 
 
-def getWaitingPatterns(waitingPatterns: list, number: int, isSameWaiting):
+def getWaitingPatterns(waitingPatterns: list, number: int):
     suit = SuitLoop.getFirstSuit(number)
     firstSuit = suit
 
@@ -81,7 +81,7 @@ def getWaitingPatterns(waitingPatterns: list, number: int, isSameWaiting):
 
                 continue
 
-        waitingPatterns.append({"suit": suit.suit, "left": isLeftIrreducible, "right": isRightIrreducible, "isAcs": False, "suitNumber": 1})
+        waitingPatterns.append({"suit": suit.suit, "left": isLeftIrreducible, "right": isRightIrreducible, "isSendable": suit.isSendable(), "suitNumber": 1})
 
         suit = SuitLoop.nextSuit(suit)
         if suit == firstSuit:
@@ -91,14 +91,14 @@ def getWaitingPatterns(waitingPatterns: list, number: int, isSameWaiting):
 def main():
     isSameWaiting = lambda x: True
     waitingPatterns = []
-    getWaitingPatterns(waitingPatterns, 1, isSameWaiting)
-    getWaitingPatterns(waitingPatterns, 2, isSameWaiting)
-    getWaitingPatterns(waitingPatterns, 4, isSameWaiting)
-    getWaitingPatterns(waitingPatterns, 5, isSameWaiting)
-    getWaitingPatterns(waitingPatterns, 7, isSameWaiting)
+    getWaitingPatterns(waitingPatterns, 1)
+    getWaitingPatterns(waitingPatterns, 2)
+    getWaitingPatterns(waitingPatterns, 4)
+    getWaitingPatterns(waitingPatterns, 5)
+    getWaitingPatterns(waitingPatterns, 7)
     return setWaitingNumber(waitingPatterns)
-    getWaitingPatterns(waitingPatterns, 8, isSameWaiting)
-    getWaitingPatterns(waitingPatterns, 10, isSameWaiting)
-    getWaitingPatterns(waitingPatterns, 11, isSameWaiting)
-    getWaitingPatterns(waitingPatterns, 13, isSameWaiting)
+    getWaitingPatterns(waitingPatterns, 8)
+    getWaitingPatterns(waitingPatterns, 10)
+    getWaitingPatterns(waitingPatterns, 11)
+    getWaitingPatterns(waitingPatterns, 13)
     return setWaitingNumber(waitingPatterns)

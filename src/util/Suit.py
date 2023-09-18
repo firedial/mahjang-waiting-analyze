@@ -37,6 +37,9 @@ class Suit:
         else:
             return False
 
+    def isSendable(self) -> bool:
+        return self.__isAgari()
+
     def isRangeFull(self) -> bool:
         return self.__getRange() == self.SUIT_LENGTH
 
