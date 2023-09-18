@@ -1,10 +1,9 @@
 from dataclasses import dataclass
-from typing import ClassVar
+from typing import ClassVar, Self
 from src.util.Block import Block
 from functools import cached_property
 from src.util.WaitingType import WaitingType
 from src.util.WaitingStructure import WaitingStructure
-from typing import Self
 
 
 @dataclass(frozen=True)
@@ -415,8 +414,56 @@ class Suit:
         else:
             return True
 
+    def __getRemoveuPattern(self, removedSuit: Self) -> tuple[int, int]:
+        # 除去した牌が面子の場合
+        if self.sum() - removedSuit.sum() == 3:
+            return (0, 0)
+
+        hasOne = False
+        for index in range(self.SUIT_LENGTH):
+            diff = self.suit[index] - removedSuit.suit[index]
+            if diff == 0:
+                continue
+
+            # 除去した牌が雀頭の場合
+            if diff == 2:
+                return (index, 2)
+
+            # 既に1があったかどうか
+            if diff == 1:
+                hasOne = True
+                continue
+
+            # 除去した牌が雀頭接続順子の場合
+            if diff == 3:
+                return (index, 113) if hasOne else (index, 311)
+
+        raise ValueError("Unexpected pattern.")
+
     def __isSameWaiting(self, removedSuit: Self) -> bool:
-        return False
+        index, removePattern = self.__getRemoveuPattern(removedSuit)
+
+        # 面子除去のとき
+        if removePattern == 0:
+            return self.waitingStructure == removedSuit.waitingStructure
+
+        # 雀頭除去のとき
+        if removePattern == 2:
+            # 待ち送り系でシャンポン待ちであるとき
+            if removedSuit.isSendable() and self.waitingStructure.waitingStructures[index].isShampon:
+                return self.waitingStructure == removedSuit.waitingStructure.addAtama(index)
+            else:
+                return self.waitingStructure == removedSuit.waitingStructure
+
+        # 雀頭接続順子(113)除去のとき
+        if removePattern == 113 or removePattern == 311:
+            # 待ち送り系でシャンポン待ちであるとき
+            if removedSuit.isSendable() and self.waitingStructure.waitingStructures[index].isShampon:
+                return self.waitingStructure == removedSuit.waitingStructure.addAtamaConnectedShuntsu(index, removePattern)
+            else:
+                return self.waitingStructure == removedSuit.waitingStructure
+
+        raise ValueError("Unexpected pattern.")
 
     # ---------------------------------------------------------------------------- #
     # 既約に関する処理 ここまで

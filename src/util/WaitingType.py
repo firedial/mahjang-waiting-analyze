@@ -32,6 +32,24 @@ class WaitingType:
             isRyanmenRight = self.isRyanmenRight,
         )
 
+    def addRyanmenLeft(self):
+        return WaitingType(
+            isTanki = self.isTanki,
+            isShampon = self.isShampon,
+            isKanchan = self.isKanchan,
+            isRyanmenLeft = True,
+            isRyanmenRight = self.isRyanmenRight,
+        )
+
+    def addRyanmenRight(self):
+        return WaitingType(
+            isTanki = self.isTanki,
+            isShampon = self.isShampon,
+            isKanchan = self.isKanchan,
+            isRyanmenLeft = self.isRyanmenLeft,
+            isRyanmenRight = True,
+        )
+
     def __eq__(self, other) -> bool:
         return self.isTanki == other.isTanki and self.isShampon == other.isShampon and self.isKanchan == other.isKanchan and self.isRyanmenLeft == other.isRyanmenLeft and self.isRyanmenRight == other.isRyanmenRight
 
