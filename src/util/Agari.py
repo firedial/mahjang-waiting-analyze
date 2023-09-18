@@ -1,8 +1,7 @@
-from src.Suit import Suit
-from src.Waiting import Waiting
-from src.WaitingStructure import WaitingStructure
-from src.WaitingType import WaitingType
-import src.Remove as Remove
+from src.util.Suit import Suit
+from src.util.WaitingStructure import WaitingStructure
+from src.util.WaitingType import WaitingType
+import src.util.Remove as Remove
 
 
 def isAgari(suit: Suit) -> bool:
@@ -48,26 +47,6 @@ def isAgari(suit: Suit) -> bool:
         return False
 
 
-def getWaiting(suit: Suit) -> Waiting:
-    waitingCount = []
-
-    for index in range(suit.length()):
-        # 一枚牌を追加する
-        addedTileSuit = suit.addTile(index)
-
-        # 追加できなかったときは次のループへ
-        if addedTileSuit is None:
-            waitingCount.append(False)
-            continue
-
-        if isAgari(addedTileSuit):
-            waitingCount.append(True)
-        else:
-            waitingCount.append(False)
-
-    return Waiting(tuple(waitingCount))
-
-
 def getWaitingStructure(suit: Suit) -> WaitingStructure:
     waitingStructures = []
     for index in range(suit.length()):
@@ -88,31 +67,3 @@ def getWaitingStructure(suit: Suit) -> WaitingStructure:
         )
 
     return WaitingStructure(tuple(waitingStructures))
-
-def isShampon(suit: Suit, index: int) -> bool:
-    addedTileSuit = suit.addTile(index)
-
-    # 追加できなかった場合
-    if addedTileSuit is None:
-        return False
-
-    # 刻子にできない場合
-    if addedTileSuit.suit[index] < 3:
-        return False
-
-    return isAgari(addedTileSuit.subTile(index, 3))
-
-
-def isRyanmen(suit: Suit, index: int, isFormer: bool) -> bool:
-    addedTileSuit = suit.addTile(index)
-    direction = 1 if isFormer else -1
-
-    # 追加できなかった場合
-    if addedTileSuit is None:
-        return False
-
-    # 順子にできない場合
-    if addedTileSuit.suit[index] < 1 or addedTileSuit.suit[index + direction * 1] < 1 or addedTileSuit.suit[index + direction * 2] < 1:
-        return False
-
-    return isAgari(addedTileSuit.subTile(index, 1).subTile(index + direction * 1, 1).subTile(index + direction * 2, 1))

@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from typing import ClassVar
-import src.WaitingType as WaitingType
+import src.util.WaitingType as WaitingType
 
 @dataclass(frozen=True)
 class WaitingStructure:

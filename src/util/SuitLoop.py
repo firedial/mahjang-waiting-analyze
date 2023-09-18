@@ -1,4 +1,4 @@
-from src.Suit import Suit
+from src.util.Suit import Suit
 
 """
 牌形を全パターン舐めるアルゴリズム(通称: 牌くるくる)
