@@ -33,6 +33,8 @@ class Suit:
         for tile, waitingType in zip(self.suit, self.waitingStructure.waitingStructures):
             if tile < self.MAX_TILE_COUNT and waitingType.hasWaiting():
                 return True
+        else:
+            return False
 
     def isSendable(self) -> bool:
         return self.__isAgari()
