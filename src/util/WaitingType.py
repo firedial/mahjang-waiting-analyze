@@ -20,7 +20,10 @@ class WaitingType:
         object.__setattr__(self, "isRyanmenLeft", isRyanmenLeft)
         object.__setattr__(self, "isRyanmenRight", isRyanmenRight)
 
-    def addShampon(self, index: int):
+    def hasWaiting(self):
+        return self.isTanki or self.isShampon or self.isKanchan or self.isRyanmenLeft or self.isRyanmenRight
+
+    def addShampon(self):
         return WaitingType(
             isTanki = self.isTanki,
             isShampon = True,
