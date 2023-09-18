@@ -34,8 +34,6 @@ class Suit:
         for tile, waitingType in zip(self.suit, self.waitingStructure.waitingStructures):
             if tile < self.MAX_TILE_COUNT and waitingType.hasWaiting():
                 return True
-        else:
-            return False
 
     def isSendable(self) -> bool:
         return self.__isAgari()
@@ -59,6 +57,9 @@ class Suit:
             suit = suit.__getOneRightSuit()
 
         return suit
+
+    def __isRegularForm(self) -> bool:
+        return self.sum() % 3 == 1
 
     def __getOneLeftSuit(self) -> Self:
         resultSuit = []
@@ -244,7 +245,7 @@ class Suit:
         return removedSuits
 
 
-    def getRemovedAtamaPatterns(self) -> list[Self]:
+    def __getRemovedAtamaPatterns(self) -> list[Self]:
         """
         雀頭のパターンを省けるだけ省いた数牌のリストを返す
 
@@ -254,7 +255,7 @@ class Suit:
         return self.__getRemovedBlockPatterns(Block((2, )))
 
 
-    def getRemovedAtamaConnectedShuntsuPatterns(self) -> list[Self]:
+    def __getRemovedAtamaConnectedShuntsuPatterns(self) -> list[Self]:
         """
         雀頭接続順子のパターンを省けるだけ省いた数牌のリストを返す
 
@@ -264,7 +265,7 @@ class Suit:
         return self.__getRemovedMultiBlockPatterns([Block((3, 1, 1, 0)), Block((0, 1, 1, 3))])
 
 
-    def getRemovedMentsuPatterns(self) -> list[Self]:
+    def __getRemovedMentsuPatterns(self) -> list[Self]:
         """
         面子(刻子と順子)のパターンを省けるだけ省いた数牌のリストを返す
 
@@ -352,14 +353,14 @@ class Suit:
 
         # 枚数が 3n + 2 場合は頭を除去する
         if suitTileCount % 3 == 2:
-            for h in self.getRemovedAtamaPatterns():
+            for h in self.__getRemovedAtamaPatterns():
                 if h.__isAgari():
                     return True
             else:
                 return False
 
         # 3n 枚の時のは面子の除去
-        for h in self.getRemovedMentsuPatterns():
+        for h in self.__getRemovedMentsuPatterns():
             if h.__isAgari():
                 return True
         else:
@@ -396,8 +397,26 @@ class Suit:
     # ---------------------------------------------------------------------------- #
 
     def isIrreducible(self) -> bool:
-        # @todo 後で実装する
+        # 面子の既約
+        if not self.__isFormIrreducible(self.__getRemovedMentsuPatterns()):
+            return False
+
+        # 正規形のときは待ち送り形の既約もみる
+        if self.__isRegularForm():
+            if not self.__isFormIrreducible(self.__getRemovedAtamaPatterns()) or not self.__isFormIrreducible(self.__getRemovedAtamaConnectedShuntsuPatterns()):
+                return False
+
         return True
+
+    def __isFormIrreducible(self, suits: list[Self]):
+        for suit in suits:
+            if self.__isSameWaiting(suit):
+                return False
+        else:
+            return True
+
+    def __isSameWaiting(self, removedSuit: Self) -> bool:
+        return False
 
     # ---------------------------------------------------------------------------- #
     # 既約に関する処理 ここまで
