@@ -18,7 +18,6 @@ def getWaitingPatterns(waitingPatterns: list, number: int, isSameWaiting):
     firstSuit = suit
 
     while True:
-        print(suit)
         # 基本形ではない時は考慮外
         if not suit.isBasicForm():
             suit = SuitLoop.nextSuit(suit)
