@@ -445,7 +445,7 @@ class Suit:
 
         # 面子除去のとき
         if removePattern == 0:
-            return self.waitingStructure == removedSuit.waitingStructure
+            return self.waitingStructure == removedSuit.waitingStructure and self.isSendable() == removedSuit.isSendable()
 
         # 雀頭除去のとき
         if removePattern == 2:
