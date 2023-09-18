@@ -31,6 +31,14 @@ class WaitingStructure:
 
         raise ValueError("Unexpected pattern.")
 
+    def getWaitingStructureString(self) -> str:
+        string = ''
+
+        for waitingType in self.waitingStructures:
+            string += waitingType.getWaitingTypeString()
+
+        return string
+
     def __eq__(self, other) -> bool:
         for x, y in zip(self.waitingStructures, other.waitingStructures):
             if x != y:

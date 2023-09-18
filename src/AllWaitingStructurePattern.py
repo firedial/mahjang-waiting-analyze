@@ -11,21 +11,12 @@ def setWaitingNumber(waitingPatterns: list) -> list:
     return sortedPatterns
 
 
-def getWaitingStructureString(waitingStructure: WaitingStructure) -> str:
-    string = ''
-
-    for waitingType in waitingStructure.waitingStructures:
-        string += waitingType.getWaitingTypeString()
-
-    return string
-
-
 def getWaitingPatterns(suit: Suit):
     # 基本形かつ聴牌形ではない時は考慮外
     if not suit.isBasicForm() or not suit.isTempaiWithoutTileCount():
         return None
 
-    return {"suit": suit.getLeftAttachSuit().suit, "waitingStructure": getWaitingStructureString(suit.getLeftAttachSuit().waitingStructure), "suitNumber": suit.getSuitNumber()}
+    return {"suit": suit.getLeftAttachSuit().suit, "waitingStructure": suit.getLeftAttachSuit().waitingStructure.getWaitingStructureString(), "suitNumber": suit.getSuitNumber()}
 
 
 def getWaitingPatternsLoop(waitingPatterns: list, number: int):
