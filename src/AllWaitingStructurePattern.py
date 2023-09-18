@@ -17,7 +17,7 @@ def getWaitingStructureString(waitingStructure: WaitingStructure) -> str:
     for waitingType in waitingStructure.waitingStructures:
         string += waitingType.getWaitingTypeString()
 
-    return "|" + string[0:3] + "|" + string[3:6] + "|" + string[6:] + "|"
+    return string
 
 
 def getWaitingPatterns(suit: Suit):
