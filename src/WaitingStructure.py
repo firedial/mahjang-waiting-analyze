@@ -15,6 +15,10 @@ class WaitingStructure:
 
         object.__setattr__(self, "waitingStructures", waitingStructures)
 
+    def addShampon(self, index: int):
+        addedShampon = self.waitingStructures[index].addShampon(index)
+        return WaitingStructure(self.waitingStructures[:index] + (addedShampon, ) + self.waitingStructures[index + 1:])
+
     def __eq__(self, other) -> bool:
         for x, y in zip(self.waitingStructures, other.waitingStructures):
             if x != y:

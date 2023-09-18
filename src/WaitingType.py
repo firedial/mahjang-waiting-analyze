@@ -20,6 +20,15 @@ class WaitingType:
         object.__setattr__(self, "isRyanmenLeft", isRyanmenLeft)
         object.__setattr__(self, "isRyanmenRight", isRyanmenRight)
 
+    def addShampon(self, index: int):
+        return WaitingType(
+            isTanki = self.isTanki,
+            isShampon = True,
+            isKanchan = self.isKanchan,
+            isRyanmenLeft = self.isRyanmenLeft,
+            isRyanmenRight = self.isRyanmenRight,
+        )
+
     def __eq__(self, other) -> bool:
         return self.isTanki == other.isTanki and self.isShampon == other.isShampon and self.isKanchan == other.isKanchan and self.isRyanmenLeft == other.isRyanmenLeft and self.isRyanmenRight == other.isRyanmenRight
 

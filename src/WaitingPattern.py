@@ -103,6 +103,7 @@ def main(isSameWaiting):
     getWaitingPatterns(waitingPatterns, 4, isSameWaiting)
     getWaitingPatterns(waitingPatterns, 5, isSameWaiting)
     getWaitingPatterns(waitingPatterns, 7, isSameWaiting)
+    return setWaitingNumber(waitingPatterns)
     getWaitingPatterns(waitingPatterns, 8, isSameWaiting)
     getWaitingPatterns(waitingPatterns, 10, isSameWaiting)
     getWaitingPatterns(waitingPatterns, 11, isSameWaiting)
