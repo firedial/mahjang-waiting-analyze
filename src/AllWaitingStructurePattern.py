@@ -15,18 +15,7 @@ def getWaitingStructureString(waitingStructure: WaitingStructure) -> str:
     string = ''
 
     for waitingType in waitingStructure.waitingStructures:
-        code = 10240 + 2
-        if waitingType.isShampon:
-            code += 192
-        if waitingType.isRyanmenLeft:
-            code += 1
-        if waitingType.isRyanmenRight:
-            code += 8
-        if waitingType.isTanki:
-            code += 16
-        if waitingType.isKanchan:
-            code += 32
-        string += chr(code)
+        string += waitingType.getWaitingTypeString()
 
     return "|" + string[0:3] + "|" + string[3:6] + "|" + string[6:] + "|"
 

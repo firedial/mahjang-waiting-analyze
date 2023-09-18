@@ -50,6 +50,21 @@ class WaitingType:
             isRyanmenRight = True,
         )
 
+    def getWaitingTypeString(self) -> str:
+        code = 10240 + 2
+        if self.isShampon:
+            code += 192
+        if self.isRyanmenLeft:
+            code += 1
+        if self.isRyanmenRight:
+            code += 8
+        if self.isTanki:
+            code += 16
+        if self.isKanchan:
+            code += 32
+
+        return chr(code)
+
     def __eq__(self, other) -> bool:
         return self.isTanki == other.isTanki and self.isShampon == other.isShampon and self.isKanchan == other.isKanchan and self.isRyanmenLeft == other.isRyanmenLeft and self.isRyanmenRight == other.isRyanmenRight
 
