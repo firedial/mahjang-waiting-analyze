@@ -63,7 +63,7 @@ def getWaitingPatterns(suit: Suit):
         if not isCenterIrreducible:
             return None
 
-    return {"suit": suit.suit, "left": isLeftIrreducible, "right": isRightIrreducible, "isSendable": suit.isSendable(), "suitNumber": 1}
+    return {"suit": suit.suit, "left": isLeftIrreducible, "right": isRightIrreducible, "suitNumber": suit.getSuitNumber()}
 
 
 def getWaitingPatternsLoop(waitingPatterns: list, number: int):

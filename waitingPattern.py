@@ -10,6 +10,6 @@ for value in result:
     csvForm.append(value)
 
 with open('result/waitingPattern.csv', 'w') as f:
-    writer = csv.DictWriter(f, ['number', 'suit', 'left', 'right', 'isSendable'])
+    writer = csv.DictWriter(f, ['number', 'suit', 'left', 'right'])
     writer.writeheader()
     writer.writerows(csvForm)

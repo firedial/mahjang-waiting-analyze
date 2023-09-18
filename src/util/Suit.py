@@ -57,6 +57,17 @@ class Suit:
 
         return suit
 
+    def getSuitNumber(self) -> int:
+        leftAttachedSuit = self.getLeftAttachSuit()
+
+        countMap = {1: 9, 2: 8, 4: 7, 5: 6, 7: 5, 8: 4, 10: 3, 11: 2, 13: 1}
+        handCount = self.sum() + (2 if not self.__isRegularForm() else 0)
+        number = countMap[handCount] * 10 + countMap[self.sum()]
+        for tile in leftAttachedSuit.suit:
+            number = number * 10 + tile
+
+        return number
+
     def __isRegularForm(self) -> bool:
         return self.sum() % 3 == 1
 
