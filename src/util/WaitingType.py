@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import ClassVar
+from typing import ClassVar, Self
 
 
 @dataclass(frozen=True)
@@ -64,6 +64,18 @@ class WaitingType:
             code += 32
 
         return chr(code)
+
+    @staticmethod
+    def getWaitingTypeFromString(string: str) -> Self:
+        code = ord(string) - 10240
+
+        return WaitingType(
+            isTanki = False if code & 0b00010000 == 0 else True,
+            isShampon = False if code & 0b11000000 == 0 else True,
+            isKanchan = False if code & 0b00100000 == 0 else True,
+            isRyanmenLeft = False if code & 0b00000001 == 0 else True,
+            isRyanmenRight = False if code & 0b00001000 == 0 else True,
+        )
 
     def __eq__(self, other) -> bool:
         return self.isTanki == other.isTanki and self.isShampon == other.isShampon and self.isKanchan == other.isKanchan and self.isRyanmenLeft == other.isRyanmenLeft and self.isRyanmenRight == other.isRyanmenRight

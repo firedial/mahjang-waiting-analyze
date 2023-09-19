@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from typing import ClassVar, Self
-import src.util.WaitingType as WaitingType
+from src.util.WaitingType import WaitingType
 
 @dataclass(frozen=True)
 class WaitingStructure:
@@ -38,6 +38,10 @@ class WaitingStructure:
             string += waitingType.getWaitingTypeString()
 
         return string
+
+    @staticmethod
+    def getWaitingStructureFromString(string: str) -> Self:
+        return WaitingStructure(tuple(WaitingType.getWaitingTypeFromString(s) for s in string))
 
     def __eq__(self, other) -> bool:
         for x, y in zip(self.waitingStructures, other.waitingStructures):
