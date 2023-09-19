@@ -434,7 +434,7 @@ class Suit:
         else:
             return True
 
-    def __getRemoveuPattern(self, removedSuit: Self) -> tuple[int, int]:
+    def __getRemovePattern(self, removedSuit: Self) -> tuple[int, int]:
         # 除去した牌が面子の場合
         if self.sum() - removedSuit.sum() == 3:
             return (0, 0)
@@ -460,28 +460,36 @@ class Suit:
 
         raise ValueError("Unexpected pattern.")
 
+    # @todo self 関係ないのでなくしたい
+    def __isSameWaitingStructure(self, a: WaitingStructure, b: WaitingStructure):
+        for x, y in zip(a.waitingStructures, b.waitingStructures):
+            if x.hasWaiting() != y.hasWaiting():
+                return False
+        else:
+            return True
+
     def __isSameWaiting(self, removedSuit: Self) -> bool:
-        index, removePattern = self.__getRemoveuPattern(removedSuit)
+        index, removePattern = self.__getRemovePattern(removedSuit)
 
         # 面子除去のとき
         if removePattern == 0:
-            return self.waitingStructure == removedSuit.waitingStructure and self.isSendable() == removedSuit.isSendable()
+            return self.__isSameWaitingStructure(self.waitingStructure, removedSuit.waitingStructure) and self.isSendable() == removedSuit.isSendable()
 
         # 雀頭除去のとき
         if removePattern == 2:
             # 待ち送り系でシャンポン待ちであるとき
             if removedSuit.isSendable() and self.waitingStructure.waitingStructures[index].isShampon:
-                return self.waitingStructure == removedSuit.waitingStructure.addAtama(index)
+                return self.__isSameWaitingStructure(self.waitingStructure, removedSuit.waitingStructure.addAtama(index))
             else:
-                return self.waitingStructure == removedSuit.waitingStructure
+                return self.__isSameWaitingStructure(self.waitingStructure, removedSuit.waitingStructure)
 
         # 雀頭接続順子(113)除去のとき
         if removePattern == 113 or removePattern == 311:
             # 待ち送り系でシャンポン待ちであるとき
             if removedSuit.isSendable() and self.waitingStructure.waitingStructures[index].isShampon:
-                return self.waitingStructure == removedSuit.waitingStructure.addAtamaConnectedShuntsu(index, removePattern)
+                return self.__isSameWaitingStructure(self.waitingStructure, removedSuit.waitingStructure.addAtamaConnectedShuntsu(index, removePattern))
             else:
-                return self.waitingStructure == removedSuit.waitingStructure
+                return self.__isSameWaitingStructure(self.waitingStructure, removedSuit.waitingStructure)
 
         raise ValueError("Unexpected pattern.")
 
