@@ -151,3 +151,56 @@ class TestSuit(unittest.TestCase):
 
         suit = Suit((1, 2, 3, 4, 0, 0, 2, 3, 1))
         self.assertFalse(suit.isBasicForm())
+
+    def test_waitingStructure(self):
+        # ノーテン形
+        suit = Suit((0, 1, 0, 2, 0, 1, 0, 0, 0))
+        self.assertEqual(suit.waitingStructure.getWaitingStructureString(), '⠂⠂⠂⠂⠂⠂⠂⠂⠂')
+
+        # 単騎待ち
+        suit = Suit((0, 1, 0, 0, 0, 0, 0, 0, 0))
+        self.assertEqual(suit.waitingStructure.getWaitingStructureString(), '⠂⠒⠂⠂⠂⠂⠂⠂⠂')
+
+        # カンチャン待ち
+        suit = Suit((0, 1, 0, 1, 0, 0, 0, 0, 0))
+        self.assertEqual(suit.waitingStructure.getWaitingStructureString(), '⠂⠂⠢⠂⠂⠂⠂⠂⠂')
+
+        # シャンポン待ち
+        suit = Suit((0, 2, 0, 0, 0, 0, 0, 0, 0))
+        self.assertEqual(suit.waitingStructure.getWaitingStructureString(), '⠂⣂⠂⠂⠂⠂⠂⠂⠂')
+
+        # 両面待ち
+        suit = Suit((0, 1, 1, 0, 0, 0, 0, 0, 0))
+        self.assertEqual(suit.waitingStructure.getWaitingStructureString(), '⠊⠂⠂⠃⠂⠂⠂⠂⠂')
+
+        # 単騎待ち + カンチャン待ち
+        suit = Suit((0, 1, 2, 1, 0, 0, 0, 0, 0))
+        self.assertEqual(suit.waitingStructure.getWaitingStructureString(), '⠂⠂⠲⠂⠂⠂⠂⠂⠂')
+
+        # 雀頭接続順子
+        suit = Suit((0, 3, 1, 1, 0, 0, 0, 0, 0))
+        self.assertEqual(suit.waitingStructure.getWaitingStructureString(), '⠂⣊⠂⠂⠃⠂⠂⠂⠂')
+
+        # 九蓮宝燈
+        suit = Suit((3, 1, 1, 1, 1, 1, 1, 1, 3))
+        self.assertEqual(suit.waitingStructure.getWaitingStructureString(), '⣊⠒⠋⠋⠒⠋⠋⠒⣃')
+
+        # 七連宝燈
+        suit = Suit((0, 1, 1, 4, 1, 4, 1, 1, 0))
+        self.assertEqual(suit.waitingStructure.getWaitingStructureString(), '⠊⠒⠪⣋⠒⣋⠣⠒⠃')
+
+        # 七連宝燈
+        suit = Suit((0, 1, 4, 1, 1, 1, 4, 1, 0))
+        self.assertEqual(suit.waitingStructure.getWaitingStructureString(), '⠊⠒⠂⠣⠒⠪⠂⠒⠃')
+
+        # 八連宝燈
+        suit = Suit((1, 1, 4, 1, 1, 1, 1, 3, 0))
+        self.assertEqual(suit.waitingStructure.getWaitingStructureString(), '⠒⠪⣋⠒⠋⠋⠒⣃⠃')
+
+        # 八連宝燈
+        suit = Suit((0, 1, 4, 2, 1, 1, 1, 3, 0))
+        self.assertEqual(suit.waitingStructure.getWaitingStructureString(), '⠊⠊⣪⠓⠋⠋⠒⣃⠃')
+
+        # 八連宝燈
+        suit = Suit((0, 1, 1, 4, 1, 1, 1, 1, 3))
+        self.assertEqual(suit.waitingStructure.getWaitingStructureString(), '⠊⠒⠪⣋⠒⠋⠋⠒⣃')
