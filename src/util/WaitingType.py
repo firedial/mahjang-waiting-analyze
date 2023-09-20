@@ -8,9 +8,9 @@ class WaitingType:
     isTanki: bool
     isShampon: bool
     isKanchan: bool
-    # 34 で 2 待ちの時
-    isRyanmenLeft: bool
     # 34 で 5 待ちの時
+    isRyanmenLeft: bool
+    # 67 で 5 待ちの時
     isRyanmenRight: bool
 
     def __init__(self, isTanki: bool, isShampon: bool, isKanchan: bool, isRyanmenLeft: bool, isRyanmenRight: bool):

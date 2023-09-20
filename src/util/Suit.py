@@ -329,15 +329,6 @@ class Suit:
         return Suit(self.suit[:index - 1] + (self.suit[index - 1] - 1, self.suit[index], self.suit[index + 1] - 1) + self.suit[index + 2:])
 
     def __getRyanmenLeftJudgeSuit(self, index: int) -> Self:
-        if index < 0 or index >= self.SUIT_LENGTH - 2:
-            return None
-
-        if self.suit[index + 1] == 0 or self.suit[index + 2] == 0:
-            return None
-
-        return Suit(self.suit[:index] + (self.suit[index], self.suit[index + 1] - 1, self.suit[index + 2] - 1) + self.suit[index + 3:])
-
-    def __getRyanmenRightJudgeSuit(self, index: int) -> Self:
         if index < 2 or index >= self.SUIT_LENGTH:
             return None
 
@@ -345,6 +336,15 @@ class Suit:
             return None
 
         return Suit(self.suit[:index - 2] + (self.suit[index - 2] - 1, self.suit[index - 1] - 1, self.suit[index]) + self.suit[index + 1:])
+
+    def __getRyanmenRightJudgeSuit(self, index: int) -> Self:
+        if index < 0 or index >= self.SUIT_LENGTH - 2:
+            return None
+
+        if self.suit[index + 1] == 0 or self.suit[index + 2] == 0:
+            return None
+
+        return Suit(self.suit[:index] + (self.suit[index], self.suit[index + 1] - 1, self.suit[index + 2] - 1) + self.suit[index + 3:])
 
     def __isAgari(self) -> bool:
         """
