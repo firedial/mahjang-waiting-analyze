@@ -117,11 +117,32 @@ class TestSuit(unittest.TestCase):
         suit = Suit((0, 0, 2, 0, 0, 0, 0, 0, 0))
         self.assertEqual(suit.getSuitNumber(), 78200000000)
 
+        suit = Suit((0, 1, 0, 0, 0, 0, 0, 0, 0))
+        self.assertEqual(suit.getSuitNumber(), 99100000000)
+
         suit = Suit((0, 2, 0, 0, 0, 0, 0, 0, 0))
         self.assertEqual(suit.getSuitNumber(), 78200000000)
 
+        suit = Suit((0, 2, 2, 0, 0, 0, 0, 0, 0))
+        self.assertEqual(suit.getSuitNumber(), 77220000000)
+
+        suit = Suit((0, 3, 1, 1, 0, 0, 0, 0, 0))
+        self.assertEqual(suit.getSuitNumber(), 56311000000)
+
+        suit = Suit((0, 3, 1, 1, 2, 0, 0, 0, 0))
+        self.assertEqual(suit.getSuitNumber(), 55311200000)
+
         suit = Suit((0, 2, 2, 2, 2, 0, 0, 0, 0))
         self.assertEqual(suit.getSuitNumber(), 34222200000)
+
+        suit = Suit((0, 2, 2, 2, 2, 2, 0, 0, 0))
+        self.assertEqual(suit.getSuitNumber(), 33222220000)
+
+        suit = Suit((0, 3, 2, 2, 2, 2, 0, 0, 0))
+        self.assertEqual(suit.getSuitNumber(), 12322220000)
+
+        suit = Suit((0, 3, 2, 2, 2, 2, 0, 2, 0))
+        self.assertEqual(suit.getSuitNumber(), 11322220200)
 
     def test_isFirstTIleZero(self):
         suit = Suit((1, 2, 3, 4, 0, 0, 2, 0, 0))
