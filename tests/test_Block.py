@@ -27,4 +27,3 @@ class TestBlock(unittest.TestCase):
     def test_length(self):
         block = Block.Block((1, 2, 3))
         self.assertEqual(block.length(), 3)
-
