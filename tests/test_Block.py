@@ -1,6 +1,7 @@
 import unittest
 import src.util.Block as Block
 
+
 class TestBlock(unittest.TestCase):
     def test_init(self):
         # 長さが0であるブロック

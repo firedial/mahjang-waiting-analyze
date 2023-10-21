@@ -1,6 +1,7 @@
 import unittest
 from src.util.Suit import Suit
 
+
 class TestSuit(unittest.TestCase):
     def test_init(self):
         # 長さ8の手牌

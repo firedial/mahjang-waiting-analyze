@@ -1,6 +1,5 @@
 from src.util.Suit import Suit
 import src.util.SuitLoop as SuitLoop
-from src.util.WaitingStructure import WaitingStructure
 
 
 def setWaitingNumber(waitingPatterns: list) -> list:

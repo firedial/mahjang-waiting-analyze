@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import ClassVar, Self
+from typing import Self
 
 
 @dataclass(frozen=True)

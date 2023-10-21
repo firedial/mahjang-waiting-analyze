@@ -2,6 +2,7 @@ from dataclasses import dataclass
 from typing import ClassVar, Self
 from src.util.WaitingType import WaitingType
 
+
 @dataclass(frozen=True)
 class WaitingStructure:
 

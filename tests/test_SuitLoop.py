@@ -2,6 +2,7 @@ import unittest
 from src.util.Suit import Suit
 import src.util.SuitLoop as SuitLoop
 
+
 class TestSuitLoop(unittest.TestCase):
     def test_nextSuit(self):
         suit = Suit((0, 0, 0, 0, 0, 0, 0, 0, 1))
@@ -18,7 +19,6 @@ class TestSuitLoop(unittest.TestCase):
 
         suit = Suit((4, 0, 0, 0, 0, 0, 0, 0, 0))
         self.assertEqual(SuitLoop.nextSuit(suit).suit, (0, 0, 0, 0, 0, 0, 0, 0, 4))
-
 
     def test_suitLoop(self):
         def countPattern(suit: Suit) -> int:

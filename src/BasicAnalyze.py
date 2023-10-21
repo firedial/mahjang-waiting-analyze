@@ -1,6 +1,6 @@
 from src.util.Suit import Suit
 from src.util.WaitingStructure import WaitingStructure
-from src.util.WaitingType import WaitingType
+
 
 def getTempaiCount(suits, num: int) -> int:
     tempaiCount = 0
@@ -14,6 +14,7 @@ def getTempaiCount(suits, num: int) -> int:
                 break
 
     return tempaiCount
+
 
 def main(records):
     suits = {}
