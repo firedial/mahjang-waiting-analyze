@@ -225,3 +225,19 @@ class TestSuit(unittest.TestCase):
         # 八連宝燈
         suit = Suit((0, 1, 1, 4, 1, 1, 1, 1, 3))
         self.assertEqual(suit.waitingStructure.getWaitingStructureString(), '⠊⠒⠪⣋⠒⠋⠋⠒⣃')
+
+    def test_isIrreducible(self):
+        suit = Suit((0, 1, 1, 1, 1, 1, 0, 0, 0))
+        self.assertTrue(suit.isIrreducible())
+
+        suit = Suit((1, 1, 1, 1, 1, 0, 0, 0, 0))
+        self.assertFalse(suit.isIrreducible())
+
+        suit = Suit((0, 3, 0, 0, 0, 2, 0, 0, 0))
+        self.assertFalse(suit.isIrreducible())
+
+        suit = Suit((3, 1, 1, 0, 0, 0, 1, 1, 3))
+        self.assertFalse(suit.isIrreducible())
+
+        suit = Suit((0, 1, 1, 4, 1, 1, 1, 1, 3))
+        self.assertTrue(suit.isIrreducible())
