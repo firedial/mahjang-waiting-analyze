@@ -244,7 +244,6 @@ class Suit:
 
         return removedSuits
 
-
     def __getRemovedMultiBlockPatterns(self, blocks: list[Block]) -> list[Self]:
         """
         数牌から牌を除去できるパターンのリストを返す
@@ -263,7 +262,6 @@ class Suit:
 
         return removedSuits
 
-
     def __getRemovedAtamaPatterns(self) -> list[Self]:
         """
         雀頭のパターンを省けるだけ省いた数牌のリストを返す
@@ -273,7 +271,6 @@ class Suit:
         """
         return self.__getRemovedBlockPatterns(Block((2, )))
 
-
     def __getRemovedAtamaConnectedShuntsuPatterns(self) -> list[Self]:
         """
         雀頭接続順子のパターンを省けるだけ省いた数牌のリストを返す
@@ -282,7 +279,6 @@ class Suit:
             lits[Self]: 牌形から雀頭接続順子のパターンを省いた数牌のリスト
         """
         return self.__getRemovedMultiBlockPatterns([Block((3, 1, 1, 0)), Block((0, 1, 1, 3))])
-
 
     def __getRemovedMentsuPatterns(self) -> list[Self]:
         """
