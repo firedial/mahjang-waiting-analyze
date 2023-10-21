@@ -423,7 +423,7 @@ class Suit:
 
         return True
 
-    def __isFormIrreducible(self, suits: list[Self]):
+    def __isFormIrreducible(self, suits: list[Self]) -> bool:
         for suit in suits:
             if self.__isSameWaiting(suit):
                 return False
