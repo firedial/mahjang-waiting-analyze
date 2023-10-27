@@ -1,8 +1,8 @@
-import src.WaitingPattern as WaitingPattern
+import src.WaitingTilePattern as WaitingTilePattern
 import csv
 
 
-result = WaitingPattern.main()
+result = WaitingTilePattern.main()
 
 csvForm = []
 for value in result:
@@ -10,6 +10,6 @@ for value in result:
     value.pop("number")
     csvForm.append(value)
 
-with open('result/waitingPattern.csv', 'w') as f:
+with open('result/waitingTilePattern.csv', 'w') as f:
     writer = csv.DictWriter(f, ['suit', 'left', 'right'])
     writer.writerows(csvForm)
