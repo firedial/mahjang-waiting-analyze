@@ -7,7 +7,6 @@ result = WaitingTilePattern.main()
 csvForm = []
 for value in result:
     value['suit'] = ''.join(map(lambda x: str(x), value['suit']))
-    value.pop("number")
     csvForm.append(value)
 
 with open('result/waitingTilePattern.csv', 'w') as f:
