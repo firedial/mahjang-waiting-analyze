@@ -24,11 +24,21 @@ class WaitingStructure:
         if pattern == 311:
             addedShamponAndRyanmen = self.waitingStructures[index].addShampon().addRyanmenRight()
             addedRyanmen = self.waitingStructures[index + 2].addRyanmenLeft()
-            return WaitingStructure(self.waitingStructures[:index] + (addedShamponAndRyanmen, self.waitingStructures[index + 1], self.waitingStructures[index + 2], addedRyanmen) + self.waitingStructures[index + 4:])
+
+            # @todo 6 という数字を使っているので使わないようにはしたい
+            if (index == 6):
+                return WaitingStructure(self.waitingStructures[:index] + (addedShamponAndRyanmen, self.waitingStructures[index + 1], self.waitingStructures[index + 2]))
+            else:
+                return WaitingStructure(self.waitingStructures[:index] + (addedShamponAndRyanmen, self.waitingStructures[index + 1], self.waitingStructures[index + 2], addedRyanmen) + self.waitingStructures[index + 4:])
         elif pattern == 113:
             addedShamponAndRyanmen = self.waitingStructures[index].addShampon().addRyanmenLeft()
             addedRyanmen = self.waitingStructures[index - 2].addRyanmenRight()
-            return WaitingStructure(self.waitingStructures[:index - 3] + (addedRyanmen, self.waitingStructures[index - 2], self.waitingStructures[index - 1], addedShamponAndRyanmen) + self.waitingStructures[index + 1:])
+
+            # @todo 2 という数字を使っているので使わないようにはしたい
+            if (index == 2):
+                return WaitingStructure((self.waitingStructures[index - 2], self.waitingStructures[index - 1], addedShamponAndRyanmen) + self.waitingStructures[index + 1:])
+            else:
+                return WaitingStructure(self.waitingStructures[:index - 3] + (addedRyanmen, self.waitingStructures[index - 2], self.waitingStructures[index - 1], addedShamponAndRyanmen) + self.waitingStructures[index + 1:])
 
         raise ValueError("Unexpected pattern.")
 

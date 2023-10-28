@@ -278,7 +278,7 @@ class Suit:
         Returns:
             lits[Self]: 牌形から雀頭接続順子のパターンを省いた数牌のリスト
         """
-        return self.__getRemovedMultiBlockPatterns([Block((3, 1, 1, 0)), Block((0, 1, 1, 3))])
+        return self.__getRemovedMultiBlockPatterns([Block((3, 1, 1)), Block((1, 1, 3))])
 
     def __getRemovedMentsuPatterns(self) -> list[Self]:
         """
