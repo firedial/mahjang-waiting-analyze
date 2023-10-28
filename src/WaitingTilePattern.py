@@ -2,6 +2,16 @@ from src.util.Suit import Suit
 import src.util.SuitLoop as SuitLoop
 
 
+def sortWaitingTilePattern(waitingPatterns: list) -> list:
+    sortedPatterns = sorted(waitingPatterns, key = lambda x: x['suitNumber'], reverse = True)
+    count = 0
+    for pattern in sortedPatterns:
+        count += 1
+        pattern.pop("suitNumber")
+
+    return sortedPatterns
+
+
 def getWaitingPatterns(suit: Suit):
     # 基本形ではない時は考慮外
     if not suit.isWaitingTileBasicForm():
@@ -52,7 +62,7 @@ def getWaitingPatterns(suit: Suit):
         if not isCenterIrreducible:
             return None
 
-    return {"suit": suit.suit, "left": isLeftIrreducible, "right": isRightIrreducible}
+    return {"suit": suit.suit, "left": isLeftIrreducible, "right": isRightIrreducible, "suitNumber": suit.getSuitNumber()}
 
 
 def getWaitingPatternsLoop(waitingPatterns: list, number: int):
@@ -80,4 +90,4 @@ def main():
     getWaitingPatternsLoop(waitingPatterns, 10)
     getWaitingPatternsLoop(waitingPatterns, 11)
     getWaitingPatternsLoop(waitingPatterns, 13)
-    return waitingPatterns
+    return sortWaitingTilePattern(waitingPatterns)
