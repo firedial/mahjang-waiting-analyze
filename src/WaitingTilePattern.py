@@ -2,7 +2,7 @@ from src.util.Suit import Suit
 import src.util.SuitLoop as SuitLoop
 
 
-def sortWaitingTilePattern(waitingPatterns: list) -> list:
+def sortWaitingPattern(waitingPatterns: list) -> list:
     sortedPatterns = sorted(waitingPatterns, key = lambda x: x['suitNumber'], reverse = True)
     count = 0
     for pattern in sortedPatterns:
@@ -90,4 +90,4 @@ def main():
     getWaitingPatternsLoop(waitingPatterns, 10)
     getWaitingPatternsLoop(waitingPatterns, 11)
     getWaitingPatternsLoop(waitingPatterns, 13)
-    return sortWaitingTilePattern(waitingPatterns)
+    return sortWaitingPattern(waitingPatterns)
