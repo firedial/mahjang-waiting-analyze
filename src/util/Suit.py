@@ -156,6 +156,38 @@ class Suit:
         # それ以外は基本形ではない
         return False
 
+    def isWaitingStructureBasicForm(self) -> bool:
+        """
+        待ち構造基本形かどうかを判定する
+
+        判定方法:
+            1. 後方重心なら基本形ではない
+            2. 両接地なら基本形
+            3. 1 番目から始まっていたら基本形
+            4. それ以外は基本形ではない
+
+        Returns:
+            bool: 基本形であれば True / そうでないとき False
+        """
+
+        suit = list(self.suit)
+        gravity: int = self.__getSuitGravityPosition()
+
+        # 後方重心なら基本形ではない
+        if gravity == -1:
+            return False
+
+        # 両接地なら基本形
+        if suit[0] != 0 and suit[-1] != 0:
+            return True
+
+        # 1番目から始まっていた場合基本形
+        if suit[0] != 0:
+            return True
+
+        # それ以外は基本形ではない
+        return False
+
     def __getSuitGravityPosition(self) -> int:
         """
         数牌の重心を求める
@@ -410,6 +442,53 @@ class Suit:
     # ---------------------------------------------------------------------------- #
     # 既約に関する処理 ここから
     # ---------------------------------------------------------------------------- #
+
+    def isWaitingStructureIrreducible(self) -> bool:
+        # 面子の既約
+        if not self.__isFormWaitingStructureIrreducible(self.__getRemovedMentsuPatterns()):
+            return False
+
+        # 正規形のときは待ち送り形の既約もみる
+        if self.__isRegularForm():
+            if not self.__isFormWaitingStructureIrreducible(self.__getRemovedAtamaPatterns()) or not self.__isFormWaitingStructureIrreducible(self.__getRemovedAtamaConnectedShuntsuPatterns()):
+                return False
+
+        return True
+
+    def __isFormWaitingStructureIrreducible(self, suits: list[Self]) -> bool:
+        for suit in suits:
+            if self.__isSameWaitingStructure(suit):
+                return False
+        else:
+            return True
+
+    def __isSameWaitingStructure(self, removedSuit: Self) -> bool:
+        def isSame(a: WaitingStructure, b: WaitingStructure):
+            return a == b
+
+        index, removePattern = self.__getRemovePattern(removedSuit)
+
+        # 面子除去のとき
+        if removePattern == 0:
+            return isSame(self.waitingStructure, removedSuit.waitingStructure) and self.isSendable() == removedSuit.isSendable()
+
+        # 雀頭除去のとき
+        if removePattern == 2:
+            # 待ち送り系でシャンポン待ちであるとき
+            if removedSuit.isSendable() and self.waitingStructure.waitingStructures[index].isShampon:
+                return isSame(self.waitingStructure, removedSuit.waitingStructure.addAtama(index))
+            else:
+                return isSame(self.waitingStructure, removedSuit.waitingStructure)
+
+        # 雀頭接続順子(113)除去のとき
+        if removePattern == 113 or removePattern == 311:
+            # 待ち送り系でシャンポン待ちであるとき
+            if removedSuit.isSendable() and self.waitingStructure.waitingStructures[index].isShampon:
+                return isSame(self.waitingStructure, removedSuit.waitingStructure.addAtamaConnectedShuntsu(index, removePattern))
+            else:
+                return isSame(self.waitingStructure, removedSuit.waitingStructure)
+
+        raise ValueError("Unexpected pattern.")
 
     def isWaitingTileIrreducible(self) -> bool:
         # 面子の既約
