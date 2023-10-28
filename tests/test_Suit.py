@@ -152,27 +152,27 @@ class TestSuit(unittest.TestCase):
         suit = Suit((0, 2, 3, 4, 0, 0, 2, 0, 0))
         self.assertTrue(suit.isFirstTIleZero())
 
-    def test_isBasicForm(self):
+    def test_isWaitingTileBasicForm(self):
         suit = Suit((0, 2, 3, 4, 0, 0, 2, 3, 0))
-        self.assertFalse(suit.isBasicForm())
+        self.assertFalse(suit.isWaitingTileBasicForm())
 
         suit = Suit((0, 4, 3, 4, 0, 0, 2, 3, 0))
-        self.assertTrue(suit.isBasicForm())
+        self.assertTrue(suit.isWaitingTileBasicForm())
 
         suit = Suit((0, 0, 4, 3, 4, 0, 0, 2, 3))
-        self.assertFalse(suit.isBasicForm())
+        self.assertFalse(suit.isWaitingTileBasicForm())
 
         suit = Suit((0, 4, 4, 3, 4, 0, 0, 2, 3))
-        self.assertTrue(suit.isBasicForm())
+        self.assertTrue(suit.isWaitingTileBasicForm())
 
         suit = Suit((4, 4, 3, 4, 0, 0, 2, 3, 0))
-        self.assertFalse(suit.isBasicForm())
+        self.assertFalse(suit.isWaitingTileBasicForm())
 
         suit = Suit((4, 4, 3, 4, 0, 0, 2, 3, 1))
-        self.assertTrue(suit.isBasicForm())
+        self.assertTrue(suit.isWaitingTileBasicForm())
 
         suit = Suit((1, 2, 3, 4, 0, 0, 2, 3, 1))
-        self.assertFalse(suit.isBasicForm())
+        self.assertFalse(suit.isWaitingTileBasicForm())
 
     def test_waitingStructure(self):
         # ノーテン形

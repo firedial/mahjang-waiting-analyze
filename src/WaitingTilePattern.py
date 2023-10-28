@@ -4,7 +4,7 @@ import src.util.SuitLoop as SuitLoop
 
 def getWaitingPatterns(suit: Suit):
     # 基本形ではない時は考慮外
-    if not suit.isBasicForm():
+    if not suit.isWaitingTileBasicForm():
         return None
 
     # 両接地形
