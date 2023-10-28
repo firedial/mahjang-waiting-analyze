@@ -413,22 +413,54 @@ class Suit:
 
     def isWaitingTileIrreducible(self) -> bool:
         # 面子の既約
-        if not self.__isFormIrreducible(self.__getRemovedMentsuPatterns()):
+        if not self.__isFormWaitingTileIrreducible(self.__getRemovedMentsuPatterns()):
             return False
 
         # 正規形のときは待ち送り形の既約もみる
         if self.__isRegularForm():
-            if not self.__isFormIrreducible(self.__getRemovedAtamaPatterns()) or not self.__isFormIrreducible(self.__getRemovedAtamaConnectedShuntsuPatterns()):
+            if not self.__isFormWaitingTileIrreducible(self.__getRemovedAtamaPatterns()) or not self.__isFormWaitingTileIrreducible(self.__getRemovedAtamaConnectedShuntsuPatterns()):
                 return False
 
         return True
 
-    def __isFormIrreducible(self, suits: list[Self]) -> bool:
+    def __isFormWaitingTileIrreducible(self, suits: list[Self]) -> bool:
         for suit in suits:
-            if self.__isSameWaiting(suit):
+            if self.__isSameWaitingTile(suit):
                 return False
         else:
             return True
+
+    def __isSameWaitingTile(self, removedSuit: Self) -> bool:
+        def isSame(a: WaitingStructure, b: WaitingStructure):
+            for x, y in zip(a.waitingStructures, b.waitingStructures):
+                if x.hasWaiting() != y.hasWaiting():
+                    return False
+            else:
+                return True
+
+        index, removePattern = self.__getRemovePattern(removedSuit)
+
+        # 面子除去のとき
+        if removePattern == 0:
+            return isSame(self.waitingStructure, removedSuit.waitingStructure) and self.isSendable() == removedSuit.isSendable()
+
+        # 雀頭除去のとき
+        if removePattern == 2:
+            # 待ち送り系でシャンポン待ちであるとき
+            if removedSuit.isSendable() and self.waitingStructure.waitingStructures[index].isShampon:
+                return isSame(self.waitingStructure, removedSuit.waitingStructure.addAtama(index))
+            else:
+                return isSame(self.waitingStructure, removedSuit.waitingStructure)
+
+        # 雀頭接続順子(113)除去のとき
+        if removePattern == 113 or removePattern == 311:
+            # 待ち送り系でシャンポン待ちであるとき
+            if removedSuit.isSendable() and self.waitingStructure.waitingStructures[index].isShampon:
+                return isSame(self.waitingStructure, removedSuit.waitingStructure.addAtamaConnectedShuntsu(index, removePattern))
+            else:
+                return isSame(self.waitingStructure, removedSuit.waitingStructure)
+
+        raise ValueError("Unexpected pattern.")
 
     def __getRemovePattern(self, removedSuit: Self) -> tuple[int, int]:
         # 除去した牌が面子の場合
@@ -453,39 +485,6 @@ class Suit:
             # 除去した牌が雀頭接続順子の場合
             if diff == 3:
                 return (index, 113) if hasOne else (index, 311)
-
-        raise ValueError("Unexpected pattern.")
-
-    # @todo self 関係ないのでなくしたい
-    def __isSameWaitingStructure(self, a: WaitingStructure, b: WaitingStructure):
-        for x, y in zip(a.waitingStructures, b.waitingStructures):
-            if x.hasWaiting() != y.hasWaiting():
-                return False
-        else:
-            return True
-
-    def __isSameWaiting(self, removedSuit: Self) -> bool:
-        index, removePattern = self.__getRemovePattern(removedSuit)
-
-        # 面子除去のとき
-        if removePattern == 0:
-            return self.__isSameWaitingStructure(self.waitingStructure, removedSuit.waitingStructure) and self.isSendable() == removedSuit.isSendable()
-
-        # 雀頭除去のとき
-        if removePattern == 2:
-            # 待ち送り系でシャンポン待ちであるとき
-            if removedSuit.isSendable() and self.waitingStructure.waitingStructures[index].isShampon:
-                return self.__isSameWaitingStructure(self.waitingStructure, removedSuit.waitingStructure.addAtama(index))
-            else:
-                return self.__isSameWaitingStructure(self.waitingStructure, removedSuit.waitingStructure)
-
-        # 雀頭接続順子(113)除去のとき
-        if removePattern == 113 or removePattern == 311:
-            # 待ち送り系でシャンポン待ちであるとき
-            if removedSuit.isSendable() and self.waitingStructure.waitingStructures[index].isShampon:
-                return self.__isSameWaitingStructure(self.waitingStructure, removedSuit.waitingStructure.addAtamaConnectedShuntsu(index, removePattern))
-            else:
-                return self.__isSameWaitingStructure(self.waitingStructure, removedSuit.waitingStructure)
 
         raise ValueError("Unexpected pattern.")
 
