@@ -120,6 +120,9 @@ class Suit:
     def isFirstTIleZero(self) -> bool:
         return self.suit[0] == 0
 
+    def __getSuitString(self) -> str:
+        return ''.join(map(lambda x: str(x), self.suit))
+
     # ---------------------------------------------------------------------------- #
     # 基本形に関する処理 ここから
     # ---------------------------------------------------------------------------- #
@@ -187,6 +190,16 @@ class Suit:
 
         # それ以外は基本形ではない
         return False
+
+    def __getWaitingStructureBasicForm(self) -> Self:
+        suit = self
+
+        # 後方重心なら前方重心にする
+        if suit.__getSuitGravityPosition() < 0:
+            suit = Suit(suit.suit[::-1])
+
+        # 左接地するものを返す
+        return suit.getLeftAttachSuit()
 
     def __getSuitGravityPosition(self) -> int:
         """
@@ -569,4 +582,36 @@ class Suit:
 
     # ---------------------------------------------------------------------------- #
     # 既約に関する処理 ここまで
+    # ---------------------------------------------------------------------------- #
+
+    # ---------------------------------------------------------------------------- #
+    # 構造一意に関する処理 ここから
+    # ---------------------------------------------------------------------------- #
+
+    # @todo self 使っていない
+    def getWaitingStructurePossiblePattern(self, suit, waitingStructurePatterns: dict, waitingStructurePossiblePatterns: list):
+        # 構造既約かどうかの確認
+        number = waitingStructurePatterns.get(suit.__getWaitingStructureBasicForm().__getSuitString())
+        if number is not None:
+            return waitingStructurePossiblePatterns.append(number)
+
+        # 面子の除去
+        for removed in suit.__getRemovedMentsuPatterns():
+            # 既約じゃなくなっていたら考慮しない
+            if not suit.__isSameWaitingStructure(removed):
+                continue
+
+            removed.getWaitingStructurePossiblePattern(removed, waitingStructurePatterns, waitingStructurePossiblePatterns)
+
+        # 正規形のときは待ち送り形の除去
+        if suit.__isRegularForm():
+            for removed in suit.__getRemovedAtamaPatterns() + suit.__getRemovedAtamaConnectedShuntsuPatterns():
+                # 既約じゃなくなっていたら考慮しない
+                if not suit.__isSameWaitingStructure(removed):
+                    continue
+
+                removed.getWaitingStructurePossiblePattern(removed, waitingStructurePatterns, waitingStructurePossiblePatterns)
+
+    # ---------------------------------------------------------------------------- #
+    # 構造一意に関する処理 ここまで
     # ---------------------------------------------------------------------------- #
