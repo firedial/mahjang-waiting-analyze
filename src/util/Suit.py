@@ -31,7 +31,7 @@ class Suit:
 
     def isTempai(self) -> bool:
         for tile, waitingType in zip(self.suit, self.waitingStructure.waitingStructures):
-            if tile < self.MAX_TILE_COUNT and waitingType.hasWaiting():
+            if waitingType.hasWaiting():
                 return True
         else:
             return False

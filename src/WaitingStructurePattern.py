@@ -18,10 +18,10 @@ def getWaitingPatterns(suit: Suit):
         return None
 
     # 既約かどうか
-    isCenterIrreducible = suit.isTempai() and suit.isWaitingStructureIrreducible()
+    isIrreducible = suit.isTempai() and suit.isWaitingStructureIrreducible()
 
     # 既約でない場合は登録しない
-    if not isCenterIrreducible:
+    if not isIrreducible:
         return None
 
     return {"suit": suit.suit, "suitNumber": suit.getSuitNumber()}
