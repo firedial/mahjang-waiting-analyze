@@ -229,16 +229,16 @@ class TestSuit(unittest.TestCase):
 
     def test_isIrreducible(self):
         suit = Suit((0, 1, 1, 1, 1, 1, 0, 0, 0))
-        self.assertTrue(suit.isIrreducible())
+        self.assertTrue(suit.isWaitingTileIrreducible())
 
         suit = Suit((1, 1, 1, 1, 1, 0, 0, 0, 0))
-        self.assertFalse(suit.isIrreducible())
+        self.assertFalse(suit.isWaitingTileIrreducible())
 
         suit = Suit((0, 3, 0, 0, 0, 2, 0, 0, 0))
-        self.assertFalse(suit.isIrreducible())
+        self.assertFalse(suit.isWaitingTileIrreducible())
 
         suit = Suit((3, 1, 1, 0, 0, 0, 1, 1, 3))
-        self.assertFalse(suit.isIrreducible())
+        self.assertFalse(suit.isWaitingTileIrreducible())
 
         suit = Suit((0, 1, 1, 4, 1, 1, 1, 1, 3))
-        self.assertTrue(suit.isIrreducible())
+        self.assertTrue(suit.isWaitingTileIrreducible())
