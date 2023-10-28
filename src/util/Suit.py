@@ -411,7 +411,7 @@ class Suit:
     # 既約に関する処理 ここから
     # ---------------------------------------------------------------------------- #
 
-    def isIrreducible(self) -> bool:
+    def isWaitingTileIrreducible(self) -> bool:
         # 面子の既約
         if not self.__isFormIrreducible(self.__getRemovedMentsuPatterns()):
             return False

@@ -20,7 +20,7 @@ def getWaitingPatterns(suit: Suit):
     # 両接地形
     if suit.isRangeFull():
         # 聴牌形、既約系でなければ考慮外
-        if not (suit.isTempai() and suit.isIrreducible()):
+        if not (suit.isTempai() and suit.isWaitingTileIrreducible()):
             return None
 
         isRightIrreducible = True
@@ -30,11 +30,11 @@ def getWaitingPatterns(suit: Suit):
     elif suit.hasOneRoomRange():
         # 右接地パターン
         rightAttachSuit = suit
-        isRightIrreducible = rightAttachSuit.isTempai() and rightAttachSuit.isIrreducible()
+        isRightIrreducible = rightAttachSuit.isTempai() and rightAttachSuit.isWaitingTileIrreducible()
 
         # 左接地パターン
         leftAttachSuit = suit.getLeftAttachSuit()
-        isLeftIrreducible = leftAttachSuit.isTempai() and leftAttachSuit.isIrreducible()
+        isLeftIrreducible = leftAttachSuit.isTempai() and leftAttachSuit.isWaitingTileIrreducible()
 
         # どっちに接地していても既約でない場合は登録しない
         if (not isRightIrreducible) and (not isLeftIrreducible):
@@ -44,15 +44,15 @@ def getWaitingPatterns(suit: Suit):
         # 範囲が7以下のときは、移動系と右接地と左接地について見る
 
         # 無接地パターン
-        isCenterIrreducible = suit.isTempai() and suit.isIrreducible()
+        isCenterIrreducible = suit.isTempai() and suit.isWaitingTileIrreducible()
 
         # 右接地パターン
         rightAttachSuit = suit.getRightAttachSuit()
-        isRightIrreducible = rightAttachSuit.isTempai() and rightAttachSuit.isIrreducible()
+        isRightIrreducible = rightAttachSuit.isTempai() and rightAttachSuit.isWaitingTileIrreducible()
 
         # 左接地パターン
         leftAttachSuit = suit.getLeftAttachSuit()
-        isLeftIrreducible = leftAttachSuit.isTempai() and leftAttachSuit.isIrreducible()
+        isLeftIrreducible = leftAttachSuit.isTempai() and leftAttachSuit.isWaitingTileIrreducible()
 
         # 無接地は既約じゃないが、接地パターンが既約になる場合はない想定
         if not isCenterIrreducible and (isRightIrreducible or isLeftIrreducible):
