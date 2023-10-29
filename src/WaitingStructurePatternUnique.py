@@ -6,6 +6,13 @@ def getWaitingPatternsLoop(waitingStructurePossiblePatterns: list, waitingStruct
     firstSuit = suit
 
     while True:
+        if not suit.isWaitingStructureBasicForm():
+            suit = SuitLoop.nextSuit(suit)
+            if suit == firstSuit:
+                break
+
+            continue
+
         waitingStructurePossiblePattern = []
         suit.getWaitingStructurePossiblePattern(suit, waitingStructurePatterns, waitingStructurePossiblePattern)
         waitingStructurePossiblePattern = set(waitingStructurePossiblePattern)
